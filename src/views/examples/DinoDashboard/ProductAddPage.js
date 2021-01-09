@@ -15,18 +15,13 @@ import {
 } from "reactstrap";
 
 import {
-  // Modal,
-  // message,
-  // Popconfirm,
+  message,
   Select,
   Tag,
-  // Form as FormAntd,
 } from "antd";
 import UploadImage from "./UploadImage";
-// import Header from "components/Headers/Header.js";
-// import formatDate from "../../../utils/index.js";
 import {
-  // PRODUCT_ENDPOINT,
+  PRODUCT_ENDPOINT,
   TYPE_PRODUCT_ENDPOINT,
   MATERIAL_ENDPOINT,
   STYLE_ENDPOINT,
@@ -34,12 +29,30 @@ import {
   COLOR_ENDPOINT,
   SIZE_ENDPOINT,
 } from "../../../constants/endpoint";
-import { on } from "gulp";
 
 export default function ProductPage() {
-  const [product, setProduct] = React.useState({});
+  const [product, setProduct] = React.useState({
+    name: "LUCKY LUKE PATTAS - LL MORRIS WHITE",
+    code: "A61094",
+    description:
+      "Phiên bản bất ngờ dành riêng cho bộ sản phẩm Ananas x Lucky Luke nhằm mục đích tôn vinh nét vẽ tài hoa của tác giả Morris. Với việc xuất hiện đầy đủ các nhân vật tuyến chính trong bộ truyện và theo nhiều chi tiết tinh tế được bố trí khắp nơi, sản phẩm được ra mắt với số lượng giới hạn trong một chiếc hộp đặc biệt hấp dẫn, đáng để bạn rinh về nhà.",
+    sold: 0,
+    inputPrice: 300000,
+    salePrice: 450000,
+    createBy: "5fbe0aca81bd88108607f69b",
+  });
+  const [images, setImages] = React.useState([
+    "https://ananas.vn/wp-content/uploads/pro_A61094_1.jpg",
+    "https://ananas.vn/wp-content/uploads/pro_A61094_2.jpg",
+    "https://ananas.vn/wp-content/uploads/pro_A61094_3.jpg",
+    "https://ananas.vn/wp-content/uploads/pro_A61094_4.jpg",
+  ]);
+  const [style, setStyle] = React.useState("");
+  const [type, setType] = React.useState("");
+  const [material, setMaterial] = React.useState("");
+  const [category, setCategory] = React.useState("");
+  const [color, setColor] = React.useState([]);
   const [sizeAmount, setSizeAmount] = React.useState({});
-
   const [productTypes, setProductTypes] = React.useState([]);
   const [categories, setCategories] = React.useState([]);
   const [styles, setStyles] = React.useState([]);
@@ -62,13 +75,11 @@ export default function ProductPage() {
   };
 
   const tagRender = (props) => {
-    const { label, value, closable, onClose } = props;
+    const { label, onClose } = props;
     // console.log(props);
     return (
       <Tag
         color={label === "white" ? "black" : label}
-        // closable={closable}
-        // onClose={onClose}
         style={{ marginRight: 3 }}
         onClick={onClose}
       >
@@ -77,7 +88,32 @@ export default function ProductPage() {
     );
   };
 
-  const handleCreate = async () => {};
+  const handleCreate = async () => {
+    axios
+      .post(PRODUCT_ENDPOINT, {
+        ...product,
+        colors: color,
+        style: style,
+        material: material,
+        type: type,
+        category: category,
+        sizes: Object.keys(sizeAmount).map((id) => ({
+          sizeId: id,
+          amount: sizeAmount[id],
+        })),
+        amount: Object.keys(sizeAmount).reduce((totalAmount, id) => {
+          return totalAmount + sizeAmount[id];
+        }, 0),
+        images: images,
+      })
+      .then(() => {
+        message.success("Create product successful");
+      })
+      .catch((err) => {
+        console.log(err);
+        message.error("Create product failed");
+      });
+  };
 
   const handleChange = (e) => {
     console.log(e.target.value);
@@ -85,12 +121,15 @@ export default function ProductPage() {
     setProduct({ ...product, [e.target.id]: e.target.value });
   };
 
-  const handleSizeAmountChange = (e) => {
-    setSizeAmount({ ...sizeAmount, [e.target.id]: +e.target.value });
+  const handleSelectChange = (value, setState) => {
+    setState(value);
+  };
+  const handleSelectColorChange = (value) => {
+    setColor([...value]);
   };
 
-  const onChange = (value) => {
-    console.log(value);
+  const handleSizeAmountChange = (e) => {
+    setSizeAmount({ ...sizeAmount, [e.target.id]: +e.target.value });
   };
 
   React.useEffect(() => {
@@ -114,6 +153,9 @@ export default function ProductPage() {
   React.useEffect(() => {
     console.log("sizeAmount", sizeAmount);
   }, [sizeAmount]);
+  React.useEffect(() => {
+    console.log("images", images);
+  }, [images]);
 
   const fillSizes = () => {
     return sizes.map((size) => (
@@ -164,7 +206,8 @@ export default function ProductPage() {
                   <FormGroup>
                     <Label>Images</Label>
                     <UploadImage
-                      images={product.images ? product.images : []}
+                      images={images ? images : []}
+                      setImages={setImages}
                     />
                   </FormGroup>
                   <FormGroup>
@@ -179,15 +222,30 @@ export default function ProductPage() {
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label for="code">Code</Label>
-                    <Input
-                      type="text"
-                      name="code"
-                      id="code"
-                      placeholder="Enter product code"
-                      value={product.code ? product.code : ""}
-                      onChange={handleChange}
-                    />
+                    <Row>
+                      <Col xs={12} sm={12} md={6}>
+                        <Label for="code">Code</Label>
+                        <Input
+                          type="text"
+                          name="code"
+                          id="code"
+                          placeholder="Enter product code"
+                          value={product.code ? product.code : ""}
+                          onChange={handleChange}
+                        />
+                      </Col>
+                      <Col xs={12} sm={12} md={6}>
+                        <Label for="salePrice">Price</Label>
+                        <Input
+                          type="number"
+                          name="salePrice"
+                          id="salePrice"
+                          placeholder="Enter product code"
+                          value={product.salePrice ? product.salePrice : 0}
+                          onChange={handleChange}
+                        />
+                      </Col>
+                    </Row>
                   </FormGroup>
                   <FormGroup>
                     <Row>
@@ -198,8 +256,10 @@ export default function ProductPage() {
                           style={{ width: "100%" }}
                           placeholder="Select a type"
                           optionFilterProp="children"
-                          onChange={onChange}
-                          value={null}
+                          onChange={(value) =>
+                            handleSelectChange(value, setType)
+                          }
+                          value={type}
                           filterOption={(input, option) =>
                             option.children
                               .toLowerCase()
@@ -210,14 +270,17 @@ export default function ProductPage() {
                         </Select>
                       </Col>
                       <Col xs={12} sm={6} md={3} lg={3}>
-                        <Label for="description">Category</Label>
+                        <Label for="category">Category</Label>
                         <Select
+                          id="category"
                           showSearch
                           style={{ width: "100%" }}
                           placeholder="Select a category"
                           optionFilterProp="children"
-                          onChange={onChange}
-                          value={null}
+                          onChange={(value) =>
+                            handleSelectChange(value, setCategory)
+                          }
+                          value={category}
                           filterOption={(input, option) =>
                             option.children
                               .toLowerCase()
@@ -234,8 +297,10 @@ export default function ProductPage() {
                           style={{ width: "100%" }}
                           placeholder="Select a material"
                           optionFilterProp="children"
-                          onChange={onChange}
-                          value={null}
+                          onChange={(value) =>
+                            handleSelectChange(value, setMaterial)
+                          }
+                          value={material}
                           filterOption={(input, option) =>
                             option.children
                               .toLowerCase()
@@ -252,8 +317,10 @@ export default function ProductPage() {
                           style={{ width: "100%" }}
                           placeholder="Select a style"
                           optionFilterProp="children"
-                          onChange={onChange}
-                          value={null}
+                          onChange={(value) =>
+                            handleSelectChange(value, setStyle)
+                          }
+                          value={style}
                           filterOption={(input, option) =>
                             option.children
                               .toLowerCase()
@@ -271,9 +338,9 @@ export default function ProductPage() {
                       mode="multiple"
                       showArrow
                       tagRender={tagRender}
-                      value={null}
+                      value={color}
                       style={{ width: "100%" }}
-                      onChange={onChange}
+                      onChange={handleSelectColorChange}
                       placeholder="Select product color"
                       // options={options}
                     >
@@ -292,6 +359,8 @@ export default function ProductPage() {
                       name="text"
                       id="description"
                       placeholder="Enter product description"
+                      value={product.description}
+                      onChange={handleChange}
                     />
                   </FormGroup>
                   <FormGroup>

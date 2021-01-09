@@ -1,26 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { Container, Col, Row, Button, Card, CardHeader } from "reactstrap";
 
-import {
-  Container,
-  Col,
-  Row,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Table,
-  Card,
-  CardHeader,
-} from "reactstrap";
-
-import { Modal, message, Popconfirm } from "antd";
-// import Header from "components/Headers/Header.js";
+import { Table as TableAntd } from "antd";
 import formatDate from "../../../utils/index.js";
-
-import { USER_ENDPOINT } from "../../../constants/endpoint";
+import { USER_ENDPOINT } from "../../../constants/endpoint.js";
 
 const END_POINT = USER_ENDPOINT;
 
@@ -37,47 +22,41 @@ export default function UserPage() {
     fetchData(END_POINT, setUsers);
   }, []);
 
-  function confirmDelete(id) {
-    axios
-      .delete(END_POINT + id)
-      .then((res) => {
-        console.log(res);
-        fetchData();
-        message.success("Delete successful.");
-      })
-      .catch((err) => {
-        console.log(err);
-        message.error("Delete failed.");
-      });
-  }
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "_id",
+      key: "_id",
+      render: (id) => (
+        <Link to={"/admin/manage-user/" + id}>{id.slice(-8)}</Link>
+      ),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Created At",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (createdAt) => formatDate(createdAt),
+    },
+    {
+      title: "Updated At",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      render: (updatedAt) => formatDate(updatedAt),
+    },
+  ];
 
-  const fillDataInToTable = () => {
-    let res = [];
-    for (let [index, user] of users.entries()) {
-      res.push(
-        <tr key={Math.random() * 1000}>
-          <th scope="row">{index + 1}</th>
-          <td>{user._id}</td>
-          <td>{user.name}</td>
-          <td>{user.email}</td>
-
-          <td>{formatDate(user.createdAt)}</td>
-          <td>{formatDate(user.updatedAt)}</td>
-          <td>
-            <Button size="sm">
-              <Link to={"/admin/manage-user/" + user._id}>
-                <div style={{ color: "#5e72e4 !important" }}>View</div>
-              </Link>
-            </Button>
-          </td>
-        </tr>
-      );
-    }
-    return res;
-  };
   return (
     <>
-      {/* <Header></Header> */}
       <Container className="mt-10 mb-10" fluid>
         <Row className="mt-10 mb-10">
           <Col className="mt-4 mb-4 ">
@@ -89,24 +68,7 @@ export default function UserPage() {
                   </div>
                 </Row>
               </CardHeader>
-              <Table
-                className="align-items-center table-flush"
-                responsive
-                style={{ borderRadius: "10px" }}
-              >
-                <thead className="thead-light">
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Created At</th>
-                    <th scope="col">Updated At</th>
-                    <th scope="col">Action</th>
-                  </tr>
-                </thead>
-                <tbody>{fillDataInToTable()}</tbody>
-              </Table>
+              <TableAntd columns={columns} dataSource={users} />
             </Card>
           </Col>
         </Row>

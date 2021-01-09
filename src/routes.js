@@ -1,29 +1,5 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import Index from "views/Index";
-// import Register from "views/examples/Register.js";
 import Login from "views/examples/Login";
-import Tables from "views/examples/Tables";
-import BenefitPlan from "views/examples/BenefitPlan";
-import Employee from "views/examples/Employee";
-import Personal from "views/examples/Personal";
-import User from "views/examples/User";
-import EmPer from "views/examples/EmPer";
 import ColorPage from "views/examples/DinoDashboard/ColorPage";
 import StylePage from "views/examples/DinoDashboard/StylesPage";
 import MaterialPage from "views/examples/DinoDashboard/MaterialPage";
@@ -33,12 +9,10 @@ import OrderPage from "views/examples/DinoDashboard/OrderPage";
 import ProductAddPage from "views/examples/DinoDashboard/ProductAddPage";
 import ProductUpdatePage from "views/examples/DinoDashboard/ProductUpdatePage";
 import CategoryPage from "views/examples/DinoDashboard/CategoryPage";
-// import UploadImage from "views/examples/DinoDashboard/UploadImage";
 import UploadFile from "views/examples/DinoDashboard/UploadFile";
 import UserPage from "views/examples/DinoDashboard/UserPage";
 import UserDetailPage from "views/examples/DinoDashboard/UserDetailPage";
 import OrderDetailPage from "views/examples/DinoDashboard/OrderDetailPage";
-import Icons from "views/examples/Icons.js";
 
 var routes = [
   {
@@ -48,55 +22,6 @@ var routes = [
     component: Index,
     layout: "/admin",
   },
-  // {
-  //   path: "/icons",
-  //   name: "Icons",
-  //   icon: "ni ni-planet text-blue",
-  //   component: Icons,
-  //   layout: "/admin",
-  // },
-  // {
-  //   path: "/tables",
-  //   name: "Tables",
-  //   icon: "ni ni-bullet-list-67 text-red",
-  //   component: Tables,
-  //   layout: "/admin",
-  // },
-  // {
-  //   path: "/BenefitPlans",
-  //   name: "Benefit Plans",
-  //   icon: "ni ni-bullet-list-67 text-red",
-  //   component: BenefitPlan,
-  //   layout: "/admin",
-  // },
-  // {
-  //   path: "/Employees",
-  //   name: "Employees",
-  //   icon: "ni ni-bullet-list-67 text-red",
-  //   component: Employee,
-  //   layout: "/admin",
-  // },
-  // {
-  //   path: "/Personals",
-  //   name: "Personals",
-  //   icon: "ni ni-bullet-list-67 text-red",
-  //   component: Personal,
-  //   layout: "/admin",
-  // },
-  // {
-  //   path: "/EmPer",
-  //   name: "EmPer",
-  //   icon: "ni ni-bullet-list-67 text-red",
-  //   component: EmPer,
-  //   layout: "/admin",
-  // },
-  // {
-  //   path: "/User",
-  //   name: "User",
-  //   icon: "ni ni-bullet-list-67 text-red",
-  //   component: User,
-  //   layout: "/admin",
-  // },
   {
     path: "/manage-product",
     name: "Product",
@@ -114,7 +39,7 @@ var routes = [
     hide: true,
   },
   {
-    path: "/manage-product/update",
+    path: "/manage-product/:productId",
     name: "Product",
     icon: "ni ni-bullet-list-67 text-red",
     component: ProductUpdatePage,

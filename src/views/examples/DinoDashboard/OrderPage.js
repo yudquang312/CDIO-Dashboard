@@ -2,30 +2,16 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-import {
-  Container,
-  Col,
-  Row,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Table,
-  Card,
-  CardHeader,
-} from "reactstrap";
+import { Container, Col, Row, Button, Card, CardHeader } from "reactstrap";
 
-import { Modal, message, Popconfirm } from "antd";
+import { Table as TableAntd, Typography, Tag } from "antd";
 // import Header from "components/Headers/Header.js";
 import formatDate from "../../../utils/index.js";
+import formatCurrency from "../../../utils/formatCurrency.js";
 
 import { ORDER_ENDPOINT } from "../../../constants/endpoint";
 
 const END_POINT = ORDER_ENDPOINT;
-
-const stickyColumnAtRight = { right: 0, position: "sticky" };
-const stickyColumnAtLeft = { left: 0, position: "sticky" };
 
 export default function UserPage() {
   const [orders, setOrders] = React.useState([]);
@@ -37,50 +23,119 @@ export default function UserPage() {
   };
 
   React.useEffect(() => {
-    fetchData(END_POINT, setOrders);
+    fetchData(END_POINT + "?limit=100", setOrders);
   }, []);
 
   const typeOfPayment = {
     0: "Trực tiếp",
     1: "Online",
   };
-
-  const fillDataInToTable = () => {
-    let res = [];
-    for (let [index, order] of orders.entries()) {
-      res.push(
-        <tr key={Math.random() * 1000}>
-          <th
-            scope="row"
-            style={{ ...stickyColumnAtLeft, backgroundColor: "#ffffff" }}
-          >
-            {index + 1}
-          </th>
-          <td>{order._id}</td>
-          <td>{formatDate(order.dateOrder)}</td>
-          <td>{typeOfPayment[order.typePayment]}</td>
-          <td>{order.address}</td>
-          <td>{order.shipMoney}</td>
-          <td>{order.intoMoney}</td>
-          <td>{order.total}</td>
-          <td>{order.user?.name}</td>
-          <td>{order.user?.email}</td>
-          <td>{order.status}</td>
-
-          <td>{formatDate(order.createdAt)}</td>
-          <td>{formatDate(order.updatedAt)}</td>
-          <td style={{ ...stickyColumnAtRight, backgroundColor: "#ffffff" }}>
-            <Button size="sm">
-              <Link to={"/admin/manage-order/" + order._id}>
-                <div style={{ color: "#5e72e4 !important" }}>View</div>
-              </Link>
-            </Button>
-          </td>
-        </tr>
-      );
-    }
-    return res;
+  const statusTag = {
+    "-1": { text: "Đang chờ xác nhận", color: "warning" },
+    0: { text: "Đang chờ lấy hàng", color: "processing" },
+    1: { text: "Đang giao", color: "processing" },
+    2: { text: "Đã giao", color: "success" },
   };
+
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "_id",
+      key: "_id",
+      fixed: "left",
+      width: 110,
+      render: (id) => <Typography.Text strong>{id.slice(-8)}</Typography.Text>,
+    },
+    {
+      title: "Date orders",
+      dataIndex: "dateOrder",
+      key: "dateOrder",
+      width: 170,
+      render: (date) => formatDate(date),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      width: 160,
+      render: (status) => (
+        <Tag color={statusTag[status].color}>{statusTag[status].text}</Tag>
+      ),
+    },
+    {
+      title: "Payment",
+      dataIndex: "typePayment",
+      key: "typePayment",
+      width: 100,
+      render: (type) => typeOfPayment[type],
+    },
+    {
+      title: "Fee Ship",
+      dataIndex: "shipMoney",
+      key: "shipMoney",
+      align: "right",
+      width: 120,
+      render: (money) => formatCurrency(money),
+    },
+    {
+      title: "Price",
+      dataIndex: "intoMoney",
+      key: "intoMoney",
+      width: 120,
+      align: "right",
+      render: (money) => formatCurrency(money),
+    },
+    {
+      title: "Total",
+      dataIndex: "total",
+      key: "total",
+      width: 120,
+      align: "right",
+      render: (money) => formatCurrency(money),
+    },
+    {
+      title: "User Name",
+      dataIndex: "user",
+      key: "name",
+      width: 150,
+      render: (user) => user?.name,
+    },
+    {
+      title: "Email",
+      dataIndex: "user",
+      key: "email",
+      width: 200,
+      render: (user) => user?.email,
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+    },
+    // {
+    //   title: "Created At",
+    //   dataIndex: "createdAt",
+    //   key: "createdAt",
+    //   render: (createdAt) => formatDate(createdAt),
+    // },
+    // {
+    //   title: "Updated At",
+    //   dataIndex: "updatedAt",
+    //   key: "updatedAt",
+    //   render: (updatedAt) => formatDate(updatedAt),
+    // },
+    {
+      title: "Action",
+      key: "action",
+      fixed: "right",
+      width: 80,
+      render: (text, order) => (
+        <Link to={"/admin/orders/" + order._id}>
+          <Button size="sm">View</Button>
+        </Link>
+      ),
+    },
+  ];
   return (
     <>
       {/* <Header></Header> */}
@@ -95,36 +150,11 @@ export default function UserPage() {
                   </div>
                 </Row>
               </CardHeader>
-              <Table
-                className="align-items-center table-flush"
-                responsive
-                style={{ borderRadius: "10px" }}
-              >
-                <thead className="thead-light">
-                  <tr>
-                    <th scope="col" style={stickyColumnAtLeft}>
-                      #
-                    </th>
-                    <th scope="col">ID</th>
-                    <th scope="col">Date orders</th>
-                    <th scope="col">Type Of Payment</th>
-                    <th scope="col">Address</th>
-                    <th scope="col">Fee Ship</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Total</th>
-                    <th scope="col">User Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Status</th>
-
-                    <th scope="col">Created At</th>
-                    <th scope="col">Updated At</th>
-                    <th scope="col" style={stickyColumnAtRight}>
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>{fillDataInToTable()}</tbody>
-              </Table>
+              <TableAntd
+                columns={columns}
+                dataSource={orders}
+                scroll={{ x: 1920, y: 700 }}
+              />
             </Card>
           </Col>
         </Row>

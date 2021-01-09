@@ -32,7 +32,6 @@ import {
 } from "variables/charts.js";
 
 import Header from "components/Headers/Header.js";
-import CustomTable from "./examples/CustomTable";
 
 class Index extends React.Component {
   constructor(props) {
@@ -57,153 +56,6 @@ class Index extends React.Component {
         this.state.chartExample1Data === "data1" ? "data2" : "data1",
     });
   };
-  // fetchData = async () => {
-  //   const {
-  //     data: { benefitPlans },
-  //   } = await axios.get("http://localhost:6969/hr/benefit-plans");
-  //   const {
-  //     data: { payRates },
-  //   } = await axios.get("http://localhost:6969/payroll/pay-rates");
-  //   const objBF = benefitPlans.reduce((obj, bf) => {
-  //     let id = bf.Benefit_Plan_ID;
-  //     let temp = { ...bf };
-  //     delete temp["Benefit_Plan_ID"];
-  //     obj[id] = temp;
-  //     return obj;
-  //   }, {});
-  //   const objBenefit = benefitPlans.reduce((obj, bf) => {
-  //     obj[bf.Benefit_Plan_ID] = {
-  //       Plan_Name: bf.Plan_Name,
-  //       shareholder: { sum: 0, count: 0 },
-  //       "non-shareholder": { sum: 0, count: 0 },
-  //     };
-  //     return obj;
-  //   }, {});
-  //   console.log("objBenefit", objBenefit);
-  //   const objPR = payRates.reduce((obj, pr) => {
-  //     let id = pr.idPay_Rates;
-  //     let temp = { ...pr };
-  //     delete temp["idPay_Rates"];
-  //     obj[id] = temp;
-  //     return obj;
-  //   }, {});
-  //   const {
-  //     data: { employees },
-  //   } = await axios.get("http://localhost:6969/payroll/employees");
-  //   const {
-  //     data: { personals },
-  //   } = await axios.get("http://localhost:6969/hr/personals");
-  //   let temp = {};
-  //   for (let key in personals[0]) {
-  //     temp[key] = null;
-  //   }
-  //   for (let key in employees[0]) {
-  //     temp[key] = null;
-  //   }
-  //   let emp = {};
-  //   for (let e of employees) {
-  //     if (!emp[e.idEmployee]) {
-  //       emp[e.idEmployee] = { ...e };
-  //     }
-  //   }
-  //   for (let e of personals) {
-  //     if (emp[e.Employee_ID]) {
-  //       emp[e.Employee_ID] = { ...emp[e.Employee_ID], ...e };
-  //     } else {
-  //       emp[e.Employee_ID] = { ...e };
-  //     }
-  //   }
-  //   let empArr = [];
-  //   for (let id in emp) {
-  //     empArr.push({ id: id, ...temp, ...emp[id] });
-  //   }
-  //   empArr = empArr.map((e) => {
-  //     for (let key in e) {
-  //       if (e[key] === null) {
-  //         e[key] = "";
-  //       }
-  //     }
-  //     return e;
-  //   });
-  //   let objShareHolder = {
-  //     shareholder: { "to-date": 0, "last-year": 0, "vacation-day": 0 },
-  //     "non-shareholder": { "to-date": 0, "last-year": 0, "vacation-day": 0 },
-  //   };
-  //   let objGender = {
-  //     male: { "to-date": 0, "last-year": 0, "vacation-day": 0 },
-  //     female: { "to-date": 0, "last-year": 0, "vacation-day": 0 },
-  //   };
-  //   let objEthnicity = {};
-  //   for (let emper of empArr) {
-  //     if (emper.Shareholder_Status) {
-  //       objShareHolder.shareholder["to-date"] += emper.Paid_To_Date || 0;
-  //       objShareHolder.shareholder["last-year"] += emper.Paid_Last_Year || 0;
-  //       objShareHolder.shareholder["vacation-day"] += emper.Vacation_Days || 0;
-  //       objBenefit[emper.Benefit_Plans].shareholder.sum +=
-  //         emper.Paid_To_Date || 0;
-  //       objBenefit[emper.Benefit_Plans].shareholder.count += 1;
-  //     } else {
-  //       objShareHolder["non-shareholder"]["to-date"] += emper.Paid_To_Date || 0;
-  //       objShareHolder["non-shareholder"]["last-year"] +=
-  //         emper.Paid_Last_Year || 0;
-  //       objShareHolder["non-shareholder"]["vacation-day"] +=
-  //         emper.Vacation_Days || 0;
-  //       objBenefit[emper.Benefit_Plans]["non-shareholder"].sum +=
-  //         emper.Paid_To_Date || 0;
-  //       objBenefit[emper.Benefit_Plans]["non-shareholder"].count += 1;
-  //     }
-  //     if (emper.Gender) {
-  //       objGender.male["to-date"] += emper.Paid_To_Date || 0;
-  //       objGender.male["last-year"] += emper.Paid_Last_Year || 0;
-  //       objGender.male["vacation-day"] += emper.Vacation_Days || 0;
-  //     } else {
-  //       objGender.female["to-date"] += emper.Paid_To_Date || 0;
-  //       objGender.female["last-year"] += emper.Paid_Last_Year || 0;
-  //       objGender.female["vacation-day"] += emper.Vacation_Days || 0;
-  //     }
-  //     if (objEthnicity[emper.Ethnicity]) {
-  //       objEthnicity[emper.Ethnicity]["to-date"] += emper.Paid_To_Date || 0;
-  //       objEthnicity[emper.Ethnicity]["last-year"] += emper.Paid_Last_Year || 0;
-  //       objEthnicity[emper.Ethnicity]["vacation-day"] +=
-  //         emper.Vacation_Days || 0;
-  //     } else {
-  //       objEthnicity[emper.Ethnicity] = {
-  //         "to-date": emper.Paid_To_Date || 0,
-  //         "last-year": emper.Paid_Last_Year || 0,
-  //         "vacation-day": emper.Vacation_Days || 0,
-  //       };
-  //     }
-  //   }
-  //   console.log("objBenefit", objBenefit);
-  //   console.log("objGender", objGender);
-  //   console.log("objShareholder", objShareHolder);
-  //   console.log("objEthnicity", objEthnicity);
-  //   this.setState({
-  //     Shareholder: Object.keys(objShareHolder).map((key) => ({
-  //       Shareholder: key,
-  //       ...objShareHolder[key],
-  //     })),
-  //     Ethnicity: Object.keys(objEthnicity).map((key) => ({
-  //       Ethnicity: key,
-  //       ...objEthnicity[key],
-  //     })),
-  //     Gender: Object.keys(objGender).map((key) => ({
-  //       Gender: key,
-  //       ...objGender[key],
-  //     })),
-  //     Benefit: Object.keys(objBenefit).map((key) => ({
-  //       Benefit_Plan_ID: key,
-  //       Plan_Name: objBenefit[key].Plan_Name,
-  //       shareholder:
-  //         objBenefit[key].shareholder.count &&
-  //         objBenefit[key].shareholder.sum / objBenefit[key].shareholder.count,
-  //       "non-shareholder":
-  //         objBenefit[key]["non-shareholder"].count &&
-  //         objBenefit[key]["non-shareholder"].sum /
-  //           objBenefit[key]["non-shareholder"].count,
-  //     })),
-  //   });
-  // };
 
   componentDidMount() {
     // this.fetchData();
@@ -217,13 +69,6 @@ class Index extends React.Component {
       <>
         {/* <Header /> */}
         <Container className="mt-4 pb-4" fluid>
-          {/* <CustomTable title="ShareHolder" data={this.state.Shareholder} />
-          <CustomTable title="Gender" data={this.state.Gender} />
-          <CustomTable title="Ethnicity" data={this.state.Ethnicity} />
-          <CustomTable
-            title="Average By Benefit Plan"
-            data={this.state.Benefit}
-          /> */}
           <Row>
             <Col className="mb-5 mb-xl-0" xl="8">
               <Card className="bg-gradient-default shadow">

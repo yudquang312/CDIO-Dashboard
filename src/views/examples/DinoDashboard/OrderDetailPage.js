@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import axios from "axios";
 import {
   Container,
@@ -15,16 +15,11 @@ import {
   Table,
 } from "reactstrap";
 
-import {
-  // Modal,
-  // message,
-  // Popconfirm,
-  Select,
-  Tag,
-  // Form as FormAntd,
-} from "antd";
+import { message, Popconfirm } from "antd";
 import { ORDER_ENDPOINT } from "../../../constants/endpoint";
 import formatDate from "../../../utils/index.js";
+// import formatCurrency from "../../../utils/formatCurrency.js"
+// const formatMoney = formatCurrency(",");
 
 const statusName = {
   "-1": "Đang chờ xác nhận",
@@ -35,8 +30,9 @@ const statusName = {
 
 export default function OrderDetail() {
   const { orderId } = useParams();
-
-  const [order, setOrder] = React.useState({ product: [] });
+  const history = useHistory();
+  const [order, setOrder] = React.useState({ products: [] });
+  const [status, setStatus] = React.useState(-1);
 
   const fetchData = async (endpoint, setState) => {
     const { data } = await axios.get(endpoint);
@@ -47,6 +43,10 @@ export default function OrderDetail() {
   React.useEffect(() => {
     fetchData(ORDER_ENDPOINT + orderId, setOrder);
   }, []);
+
+  React.useEffect(() => {
+    setStatus(order.status);
+  }, [order]);
 
   const fillInformationIntoOrder = () => {
     const { products } = order;
@@ -88,11 +88,50 @@ export default function OrderDetail() {
     }
     return res;
   };
-
+  const handleChangeStatus = (e) => {
+    console.log(e.target.value);
+    setStatus(e.target.value);
+  };
+  const cancel = (e) => {};
+  const confirmDelete = () => {
+    axios
+      .put(ORDER_ENDPOINT + "confirm/" + orderId, { confirm: -1 })
+      .then(() => {
+        message.success("Order has been canceled");
+        history.goBack();
+      })
+      .catch((err) => {
+        console.log(err);
+        message.error("Delete order failed");
+      });
+  };
   // fillInformationIntoOrder();
-  const handleUpdate = () => {};
+  const handleUpdate = () => {
+    axios
+      .put(ORDER_ENDPOINT + orderId, { status: status })
+      .then(({ data }) => {
+        console.log("data", data);
+        message.success("Update order successful");
+        fetchData(ORDER_ENDPOINT + orderId, setOrder);
+      })
+      .catch((err) => {
+        console.log(err);
+        message.error("Update order failed");
+      });
+  };
 
-  const handleDelete = () => {};
+  const handleConfirm = () => {
+    axios
+      .put(ORDER_ENDPOINT + "confirm/" + orderId, { confirm: 1 })
+      .then(() => {
+        message.success("Confirm order successful");
+        fetchData(ORDER_ENDPOINT + orderId, setOrder);
+      })
+      .catch((err) => {
+        console.log(err);
+        message.error("Confirm order failed");
+      });
+  };
 
   return (
     <>
@@ -153,7 +192,7 @@ export default function OrderDetail() {
                           type="text"
                           name="confirm"
                           id="confirm"
-                          defaultValue={
+                          value={
                             order.confirm ? "Đã Xác Nhận" : "Chưa Xác Nhận"
                           }
                           disabled
@@ -161,9 +200,14 @@ export default function OrderDetail() {
                       </Col>
                       <Col xs={12} sm={6} md={4} lg={4}>
                         <Label for="name">Status</Label>
-                        {!order.confirm ? (
-                          <Input type="select" value={order.status}>
-                            {Object.keys(statusName).map((status) => (
+                        {order.confirm ? (
+                          <Input
+                            type="select"
+                            value={status}
+                            disabled={status === 2}
+                            onChange={handleChangeStatus}
+                          >
+                            {[0, 1, 2].map((status) => (
                               <option value={+status} key={status}>
                                 {statusName[status]}
                               </option>
@@ -174,7 +218,7 @@ export default function OrderDetail() {
                             type="text"
                             name="status"
                             id="status"
-                            defaultValue={statusName[order.status]}
+                            defaultValue={statusName[status]}
                             disabled
                           />
                         )}
@@ -189,7 +233,7 @@ export default function OrderDetail() {
                           type="text"
                           name="typePayment"
                           id="typePayment"
-                          defaultValue={order.shipMoney}
+                          defaultValue={order.shipMoney }
                           disabled
                         />
                       </Col>
@@ -219,7 +263,7 @@ export default function OrderDetail() {
                           type="text"
                           name="confirm"
                           id="confirm"
-                          defaultValue={order.total}
+                          defaultValue={order.total }
                           disabled
                         />
                       </Col>
@@ -282,10 +326,21 @@ export default function OrderDetail() {
                   </FormGroup>
                   <FormGroup>
                     {order.confirm ? (
-                      <Button onClick={handleUpdate}>Update</Button>
+                      <Button onClick={handleUpdate} disabled={status === 2}>
+                        Update
+                      </Button>
                     ) : (
-                      <Button onClick={handleDelete}>Confirm</Button>
+                      <Button onClick={handleConfirm}>Confirm</Button>
                     )}
+                    <Popconfirm
+                      title="Are you sure to delete this order?"
+                      onConfirm={confirmDelete}
+                      onCancel={cancel}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <Button color="danger">Delete</Button>
+                    </Popconfirm>
                   </FormGroup>
                 </Form>
               </Container>

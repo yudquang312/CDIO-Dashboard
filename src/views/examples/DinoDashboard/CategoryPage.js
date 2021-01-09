@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-
 import {
   Container,
   Col,
@@ -10,32 +9,23 @@ import {
   FormGroup,
   Label,
   Input,
-  Table,
   Card,
   CardHeader,
 } from "reactstrap";
-
-import { Modal, message, Popconfirm } from "antd";
-// import Header from "components/Headers/Header.js";
+import { Modal, message, Popconfirm, Table as TableAntd, Space } from "antd";
 import formatDate from "../../../utils/index.js";
-import { CATEGORY_ENDPOINT } from "../../../constants/endpoint";
+import { CATEGORY_ENDPOINT } from "../../../constants/endpoint.js";
 
 const END_POINT = CATEGORY_ENDPOINT;
 
-export default function CategoryPage() {
+export default function Styles() {
   const [categories, setCategories] = React.useState([]);
   const [modalContent, setModalContent] = React.useState({
     create: false,
-    id: "",
+    _id: "",
     name: "",
-    createdAt: "",
-    updatedAt: "",
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  // const _idRef = React.useRef(null);
-  // const nameRef = React.useRef(null);
-  // const codeRef = React.useRef(null);
 
   const fetchData = async () => {
     const { data } = await axios.get(END_POINT);
@@ -46,20 +36,20 @@ export default function CategoryPage() {
   const handleDisplay = () => {
     setModalContent({
       create: true,
-      id: "",
+      _id: "",
       name: "",
     });
     setIsModalVisible(true);
   };
 
-  const showModal = (index) => () => {
-    console.log(index);
-    console.log(categories[index]);
+  const showModal = (style) => () => {
+    console.log(style);
+
     setIsModalVisible(true);
-    setModalContent((state) => ({
-      id: categories[index]._id,
-      name: categories[index].name,
-    }));
+    setModalContent({
+      create: false,
+      ...style,
+    });
   };
 
   const handleChange = (e) => {
@@ -83,9 +73,8 @@ export default function CategoryPage() {
   };
 
   const handleUpdate = async () => {
-    // setIsModalVisible(false);
     axios
-      .put(END_POINT + modalContent.id, modalContent)
+      .put(END_POINT + modalContent._id, modalContent)
       .then((res) => {
         console.log(res);
         message.success("Update successful.");
@@ -102,9 +91,8 @@ export default function CategoryPage() {
     setIsModalVisible(false);
     setModalContent({
       create: true,
-      id: "",
+      _id: "",
       name: "",
-      code: "",
     });
   };
 
@@ -116,7 +104,7 @@ export default function CategoryPage() {
     console.log(isModalVisible);
   }, [isModalVisible]);
 
-  function confirmDelete(id) {
+  const confirmDelete = (id) => {
     axios
       .delete(END_POINT + id)
       .then((res) => {
@@ -128,47 +116,65 @@ export default function CategoryPage() {
         console.log(err);
         message.error("Delete failed.");
       });
-  }
-
-  function cancel(e) {}
-  const fillDataInToTable = () => {
-    let res = [];
-    for (let [index, category] of categories.entries()) {
-      res.push(
-        <tr key={Math.random() * 1000}>
-          <th scope="row">{index + 1}</th>
-          <td>{category._id}</td>
-          <td>{category.name}</td>
-          <td>{formatDate(category.createdAt)}</td>
-          <td>{formatDate(category.updatedAt)}</td>
-
-          <td>
-            <Button onClick={showModal(index)} size="sm">
-              Update
-            </Button>
-            <Popconfirm
-              title="Are you sure to delete this category?"
-              onConfirm={() => confirmDelete(category._id)}
-              onCancel={cancel}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button color="danger" size="sm">
-                Delete
-              </Button>
-            </Popconfirm>
-          </td>
-        </tr>
-      );
-    }
-    return res;
   };
+
+  const cancel = (e) => {};
+
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "_id",
+      key: "_id",
+      render: (id) => id.slice(-8),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Created At",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (createdAt) => formatDate(createdAt),
+    },
+    {
+      title: "Updated At",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      render: (updatedAt) => formatDate(updatedAt),
+    },
+    {
+      title: "Action",
+      key: "action",
+      fixed: "right",
+      width: 180,
+      render: (text, category) => (
+        <Space size="small">
+          <Button onClick={showModal(category)} size="sm">
+            Update
+          </Button>
+          <Popconfirm
+            title="Are you sure to delete this category?"
+            onConfirm={() => confirmDelete(category._id)}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button color="danger" size="sm">
+              Delete
+            </Button>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
   return (
     <>
       {/* <Header></Header> */}
-      <Container className="mt-10" fluid>
-        <Row className="mt-10">
-          <Col className="mt-4 mb-4">
+      <Container className="mt-10 mb-10" fluid>
+        <Row className="mt-10 mb-10">
+          <Col className="mt-4 mb-4 ">
             <Card className="shadow">
               <CardHeader className="border-0">
                 <Row className="align-items-center">
@@ -182,23 +188,7 @@ export default function CategoryPage() {
                   </div>
                 </Row>
               </CardHeader>
-              <Table
-                className="align-items-center table-flush"
-                responsive
-                category={{ borderRadius: "10px" }}
-              >
-                <thead className="thead-light">
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Created At</th>
-                    <th scope="col">Updated At</th>
-                    <th scope="col">Action</th>
-                  </tr>
-                </thead>
-                <tbody>{fillDataInToTable()}</tbody>
-              </Table>
+              <TableAntd columns={columns} dataSource={categories} />
               <Modal
                 title={modalContent.create ? "Create" : "Update"}
                 visible={isModalVisible}
@@ -209,28 +199,26 @@ export default function CategoryPage() {
                 <Form>
                   {modalContent.create ? null : (
                     <FormGroup>
-                      <Label for="id">Id</Label>
+                      <Label for="_id">Id</Label>
                       <Input
+                        disabled
                         type="text"
-                        name="id"
-                        id="id"
+                        name="_id"
+                        id="_id"
                         placeholder=""
-                        // innerRef={_idRef}
-                        value={modalContent.id}
+                        value={modalContent._id}
                         onChange={handleChange}
                         plaintext={true}
                       />
                     </FormGroup>
                   )}
-
                   <FormGroup>
                     <Label for="name">Name</Label>
                     <Input
                       type="text"
                       name="name"
                       id="name"
-                      placeholder=""
-                      // innerRef={nameRef}
+                      placeholder="Enter name of color"
                       value={modalContent.name}
                       onChange={handleChange}
                     />

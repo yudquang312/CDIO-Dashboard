@@ -3,58 +3,44 @@ import { Upload, Modal } from "antd";
 import { Form, FormGroup, Label, Input } from "reactstrap";
 // import ImgCrop from "antd-img-crop";
 
-const UploadImage = (props) => {
-  // const [fileList, setFileList] = useState(
-  //   props.images?.map((image) => ({
-  //     uid: Math.random() * 10000 + "",
-  //     name: "image.png",
-  //     status: "done",
-  //     url: image,
-  //   })) || []
-  // );
-
-  const fillFileList = () =>
-    props.images?.map((image) => ({
+const UploadImage = ({ images, setImages }) => {
+  const [fileList, setFileList] = useState(
+    images?.map((image) => ({
       uid: Math.random() * 10000 + "",
       name: "image.png",
       status: "done",
       url: image,
-    })) || [];
-  // [
-  //   {
-  //     uid: "0",
+    })) || []
+  );
+  React.useEffect(() => {
+    console.log(images);
+    // setFileList(
+    //   images?.map((image) => ({
+    //     uid: Math.random() * 10000 + "",
+    //     name: "image.png",
+    //     status: "done",
+    //     url: image,
+    //   })) || []
+    // );
+  }, [images]);
+  // const fillFileList = () =>
+  //   images?.map((image) => ({
+  //     uid: Math.random() * 10000 + "",
   //     name: "image.png",
   //     status: "done",
-  //     url: "https://ananas.vn/wp-content/uploads/pro_A61102_1-500x500.jpg",
-  //   },
-  //   {
-  //     uid: "1",
-  //     name: "image.png",
-  //     status: "done",
-  //     url: "https://ananas.vn/wp-content/uploads/pro_A61102_2-500x500.jpg",
-  //   },
-  //   {
-  //     uid: "2",
-  //     name: "image.png",
-  //     status: "done",
-  //     url: "https://ananas.vn/wp-content/uploads/pro_A61102_3-500x500.jpg",
-  //   },
-  //   {
-  //     uid: "3",
-  //     name: "image.png",
-  //     status: "done",
-  //     url: "https://ananas.vn/wp-content/uploads/pro_A61102_4-500x500.jpg",
-  //   },
-  // ]
+  //     url: image,
+  //   })) || [];
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [linkImage, setLinkImage] = useState("");
 
   const onChange = ({ fileList: newFileList }) => {
-    // console.log(fileList, newFileList);
-    // setFileList(newFileList);
+    setFileList(newFileList);
   };
+  React.useEffect(() => {
+    setImages(fileList.map((file) => file.url));
+  }, [fileList]);
 
   const onPreview = async (file) => {
     let src = file.url;
@@ -77,16 +63,16 @@ const UploadImage = (props) => {
 
   const onAddLinkImageOK = () => {
     setIsModalVisible(false);
-    // setFileList((currentState) => [
-    //   ...currentState,
-    //   {
-    //     uid: Math.random() * 1000 + "",
-    //     name: "image.png",
-    //     status: "done",
-    //     url: linkImage,
-    //   },
-    // ]);
-    setLinkImage("");
+    setFileList((currentState) => [
+      ...currentState,
+      {
+        uid: Math.random() * 1000 + "",
+        name: "image.png",
+        status: "done",
+        url: linkImage,
+      },
+    ]);
+    setImages([...images, linkImage]);
   };
 
   const onAddLinkImageModalCancel = () => {
@@ -99,16 +85,15 @@ const UploadImage = (props) => {
   return (
     <>
       <Upload
-        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         listType="picture-card"
-        fileList={fillFileList()}
+        fileList={fileList}
         onChange={onChange}
         onPreview={onPreview}
         openFileDialogOnClick={false}
         beforeUpload={false}
         transformFile={false}
       >
-        {props.images && props.images.length < 4 && (
+        {images && images.length < 4 && (
           <div onClick={onOpenAddImage}>+ Upload</div>
         )}
       </Upload>
@@ -126,7 +111,6 @@ const UploadImage = (props) => {
               name="name"
               id="name"
               placeholder=""
-              // innerRef={nameRef}
               value={linkImage}
               onChange={handleLinkChange}
             />

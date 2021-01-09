@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-
 import {
   Container,
   Col,
@@ -10,16 +9,12 @@ import {
   FormGroup,
   Label,
   Input,
-  Table,
   Card,
   CardHeader,
 } from "reactstrap";
-
-import { Modal, message, Popconfirm } from "antd";
-// import Header from "components/Headers/Header.js";
+import { Modal, message, Popconfirm, Table as TableAntd, Space } from "antd";
 import formatDate from "../../../utils/index.js";
-
-import { COLOR_ENDPOINT } from "../../../constants/endpoint";
+import { COLOR_ENDPOINT } from "../../../constants/endpoint.js";
 
 const END_POINT = COLOR_ENDPOINT;
 
@@ -27,15 +22,11 @@ export default function ColorPage() {
   const [colors, setColors] = React.useState([]);
   const [modalContent, setModalContent] = React.useState({
     create: false,
-    id: "",
+    _id: "",
     name: "",
     code: "",
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  // const _idRef = React.useRef(null);
-  // const nameRef = React.useRef(null);
-  // const codeRef = React.useRef(null);
 
   const fetchData = async () => {
     const { data } = await axios.get(END_POINT);
@@ -46,29 +37,24 @@ export default function ColorPage() {
   const handleDisplay = () => {
     setModalContent({
       create: true,
-      id: "",
+      _id: "",
       name: "",
       code: "",
     });
     setIsModalVisible(true);
   };
 
-  const showModal = (index) => () => {
-    console.log(index);
-    console.log(colors[index]);
+  const showModal = (color) => () => {
+    console.log(color);
+
     setIsModalVisible(true);
-    // _idRef.current.value = colors[index]._id;
-    // nameRef.current.value = colors[index].name;
-    // codeRef.current.value = colors[index].code;
-    setModalContent((state) => ({
-      id: colors[index]._id,
-      name: colors[index].name,
-      code: colors[index].code,
-    }));
+    setModalContent({
+      ...modalContent,
+      ...color,
+    });
   };
 
   const handleChange = (e) => {
-    // console.log(e.target.value);
     console.log(e.target.value);
     setModalContent({ ...modalContent, [e.target.id]: e.target.value });
   };
@@ -89,7 +75,6 @@ export default function ColorPage() {
   };
 
   const handleUpdate = async () => {
-    // setIsModalVisible(false);
     axios
       .put(END_POINT + modalContent.id, modalContent)
       .then((res) => {
@@ -108,20 +93,11 @@ export default function ColorPage() {
     setIsModalVisible(false);
     setModalContent({
       create: true,
-      id: "",
+      _id: "",
       name: "",
       code: "",
     });
   };
-
-  // React.useEffect(() => {
-  //   const ids = colors.map(({ _id }) => _id);
-  //   console.log(ids);
-  //   const arr = ids.map((id) => axios.get(COLOR_ENDPOINT + id));
-  //   Promise.all(arr).then((values) => {
-  //     console.log(values.map(({ data }) => data));
-  //   });
-  // });
 
   React.useEffect(() => {
     fetchData();
@@ -145,57 +121,81 @@ export default function ColorPage() {
   }
 
   function cancel(e) {}
-  const fillDataInToTable = () => {
-    let res = [];
-    for (let [index, color] of colors.entries()) {
-      res.push(
-        <tr key={Math.random() * 1000}>
-          <th scope="row">{index + 1}</th>
-          <td>{color._id}</td>
-          <td>{color.name}</td>
-          <td>{color.code}</td>
-          <td
-            style={{
-              position: "relative",
-            }}
+
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "_id",
+      key: "_id",
+      render: (id) => id.slice(-8),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Code",
+      dataIndex: "code",
+      key: "code",
+    },
+    {
+      title: "Color",
+      key: "color",
+      align: "center",
+      render: (text, color) => (
+        <div
+          style={{
+            position: "absolute",
+            width: "20px",
+            height: "20px",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%,-50%)",
+            backgroundColor: color.code,
+            borderRadius: "50%",
+            // color: "transparent",
+          }}
+        ></div>
+      ),
+    },
+    {
+      title: "Created At",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (createdAt) => formatDate(createdAt),
+    },
+    {
+      title: "Updated At",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      render: (updatedAt) => formatDate(updatedAt),
+    },
+    {
+      title: "Action",
+      key: "action",
+      fixed: "right",
+      width: 180,
+      render: (text, color) => (
+        <Space size="small">
+          <Button onClick={showModal(color)} size="sm">
+            Update
+          </Button>
+          <Popconfirm
+            title="Are you sure to delete this color?"
+            onConfirm={() => confirmDelete(color._id)}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
           >
-            <div
-              style={{
-                position: "absolute",
-                width: "20px",
-                height: "20px",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%,-50%)",
-                backgroundColor: color.code,
-                borderRadius: "50%",
-                // color: "transparent",
-              }}
-            ></div>
-          </td>
-          <td>{formatDate(color.createdAt)}</td>
-          <td>{formatDate(color.updatedAt)}</td>
-          <td>
-            <Button onClick={showModal(index)} size="sm">
-              Update
+            <Button color="danger" size="sm">
+              Delete
             </Button>
-            <Popconfirm
-              title="Are you sure to delete this color?"
-              onConfirm={() => confirmDelete(color._id)}
-              onCancel={cancel}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button color="danger" size="sm">
-                Delete
-              </Button>
-            </Popconfirm>
-          </td>
-        </tr>
-      );
-    }
-    return res;
-  };
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
   return (
     <>
       {/* <Header></Header> */}
@@ -215,25 +215,7 @@ export default function ColorPage() {
                   </div>
                 </Row>
               </CardHeader>
-              <Table
-                className="align-items-center table-flush"
-                responsive
-                style={{ borderRadius: "10px" }}
-              >
-                <thead className="thead-light">
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Code</th>
-                    <th scope="col">Color</th>
-                    <th scope="col">Created At</th>
-                    <th scope="col">Updated At</th>
-                    <th scope="col">Action</th>
-                  </tr>
-                </thead>
-                <tbody>{fillDataInToTable()}</tbody>
-              </Table>
+              <TableAntd columns={columns} dataSource={colors} />
               <Modal
                 title={modalContent.create ? "Create" : "Update"}
                 visible={isModalVisible}
@@ -244,28 +226,26 @@ export default function ColorPage() {
                 <Form>
                   {modalContent.create ? null : (
                     <FormGroup>
-                      <Label for="id">Id</Label>
+                      <Label for="_id">Id</Label>
                       <Input
+                        disabled
                         type="text"
-                        name="id"
-                        id="id"
+                        name="_id"
+                        id="_id"
                         placeholder=""
-                        // innerRef={_idRef}
-                        value={modalContent.id}
+                        value={modalContent._id}
                         onChange={handleChange}
                         plaintext={true}
                       />
                     </FormGroup>
                   )}
-
                   <FormGroup>
                     <Label for="name">Name</Label>
                     <Input
                       type="text"
                       name="name"
                       id="name"
-                      placeholder=""
-                      // innerRef={nameRef}
+                      placeholder="Enter name of color"
                       value={modalContent.name}
                       onChange={handleChange}
                     />
@@ -276,8 +256,7 @@ export default function ColorPage() {
                       type="text"
                       name="code"
                       id="code"
-                      placeholder=""
-                      // innerRef={codeRef}
+                      placeholder="Enter code of color"
                       value={modalContent.code}
                       onChange={handleChange}
                     />
