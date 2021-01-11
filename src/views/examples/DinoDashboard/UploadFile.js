@@ -3,7 +3,7 @@ import axios from "axios";
 UploadFile.propTypes = {};
 
 function UploadFile(props) {
-  const [err, setError] = useState(null);
+  // const [err, setError] = useState(null);
   const [images, setImages] = useState([]);
   const uploadImage = async (e) => {
     e.preventDefault();

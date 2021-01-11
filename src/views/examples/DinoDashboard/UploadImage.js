@@ -40,7 +40,7 @@ const UploadImage = ({ images, setImages }) => {
   };
   React.useEffect(() => {
     setImages(fileList.map((file) => file.url));
-  }, [fileList]);
+  }, [fileList, setImages]);
 
   const onPreview = async (file) => {
     let src = file.url;

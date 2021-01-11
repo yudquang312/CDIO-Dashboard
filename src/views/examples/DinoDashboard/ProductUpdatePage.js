@@ -141,7 +141,7 @@ export default function ProductUpdatePage() {
     fetchData(CATEGORY_ENDPOINT, setCategories);
     fetchData(COLOR_ENDPOINT, setColors);
     fetchData(PRODUCT_ENDPOINT + productId, setProduct);
-  }, []);
+  }, [productId]);
 
   React.useEffect(() => {
     console.log(product.colors);
@@ -151,13 +151,13 @@ export default function ProductUpdatePage() {
     setCategory(product?.category?._id);
     setMaterial(product?.material?._id);
     setStyle(product?.style?._id);
-    setSizeAmount({
-      ...sizeAmount,
+    setSizeAmount((current) => ({
+      ...current,
       ...product?.sizes?.reduce((obj, size) => {
         obj[size.sizeId._id] = size.amount;
         return obj;
       }, []),
-    });
+    }));
   }, [product]);
 
   React.useEffect(() => {

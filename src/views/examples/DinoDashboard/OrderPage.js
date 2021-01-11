@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
@@ -130,7 +130,7 @@ export default function UserPage() {
       fixed: "right",
       width: 80,
       render: (text, order) => (
-        <Link to={"/admin/orders/" + order._id}>
+        <Link to={"/admin/manage-order/" + order._id}>
           <Button size="sm">View</Button>
         </Link>
       ),

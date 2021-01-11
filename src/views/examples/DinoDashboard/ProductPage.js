@@ -52,14 +52,17 @@ export default function ProductPage() {
       title: "ID",
       dataIndex: "_id",
       key: "_id",
+      fixed: "left",
       render: (id) => (
         <Link to={"/admin/manage-product/" + id}>{id.slice(-8)}</Link>
       ),
+      onFilter: (value, record) => record.name.indexOf(value) === 0,
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      width: 300,
     },
     {
       title: "Code",
@@ -110,6 +113,7 @@ export default function ProductPage() {
     {
       title: "Action",
       key: "action",
+      fixed: "right",
       render: (text, product) => (
         <Popconfirm
           title="Are you sure to delete this product?"
@@ -125,6 +129,9 @@ export default function ProductPage() {
       ),
     },
   ];
+  function onChange(pagination, filters, sorter, extra) {
+    console.log("params", pagination, filters, sorter, extra);
+  }
 
   return (
     <>
@@ -149,7 +156,8 @@ export default function ProductPage() {
               <TableAntd
                 columns={columns}
                 dataSource={products}
-                scroll={{ x: 1300 }}
+                scroll={{ x: 1500 }}
+                onChange={onChange}
               />
             </Card>
           </Col>

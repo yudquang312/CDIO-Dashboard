@@ -5,7 +5,6 @@ import {
   Container,
   Col,
   Row,
-  Button,
   Form,
   FormGroup,
   Label,
@@ -18,9 +17,9 @@ import {
   Modal,
   // message,
   // Popconfirm,
-  Select,
-  Tag,
-  Upload,
+  // Select,
+  // Tag,
+  // Upload,
   // Form as FormAntd,
 } from "antd";
 
@@ -41,7 +40,7 @@ export default function UserDetail() {
 
   React.useEffect(() => {
     fetchData(ENDPOINT + userId, setUser);
-  }, []);
+  }, [userId]);
 
   const onCancel = () => {
     setIsModalVisible(false);
@@ -50,17 +49,17 @@ export default function UserDetail() {
   const onPreview = async () => {
     setIsModalVisible(true);
   };
-  const fillFileList = () =>
-    user.avatar
-      ? [
-          {
-            uid: Math.random() * 10000 + "",
-            name: "image.png",
-            status: "done",
-            url: user.avatar,
-          },
-        ]
-      : [];
+  // const fillFileList = () =>
+  //   user.avatar
+  //     ? [
+  //         {
+  //           uid: Math.random() * 10000 + "",
+  //           name: "image.png",
+  //           status: "done",
+  //           url: user.avatar,
+  //         },
+  //       ]
+  //     : [];
 
   return (
     <>

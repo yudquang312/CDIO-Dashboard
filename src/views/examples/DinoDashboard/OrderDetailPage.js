@@ -42,7 +42,7 @@ export default function OrderDetail() {
 
   React.useEffect(() => {
     fetchData(ORDER_ENDPOINT + orderId, setOrder);
-  }, []);
+  }, [orderId]);
 
   React.useEffect(() => {
     setStatus(order.status);
@@ -233,7 +233,7 @@ export default function OrderDetail() {
                           type="text"
                           name="typePayment"
                           id="typePayment"
-                          defaultValue={order.shipMoney }
+                          defaultValue={order.shipMoney}
                           disabled
                         />
                       </Col>
@@ -263,7 +263,7 @@ export default function OrderDetail() {
                           type="text"
                           name="confirm"
                           id="confirm"
-                          defaultValue={order.total }
+                          defaultValue={order.total}
                           disabled
                         />
                       </Col>
