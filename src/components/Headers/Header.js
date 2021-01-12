@@ -8,8 +8,8 @@ const Header = ({ data }) => {
     <>
       <Container
         fluid
-        className="header pb-6 pt-4 pt-md-6"
-        style={{ background: "linear-gradient(to left, #6b1e7c, #ff55b9)" }}
+        className="header pb-6 pt-4 pt-md-6 bg-gradient-info"
+        // style={{ background: "linear-gradient(to left, #6b1e7c, #ff55b9)" }}
       >
         <Container fluid>
           <div className="header-body">

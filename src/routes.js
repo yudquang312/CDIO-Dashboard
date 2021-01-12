@@ -120,13 +120,13 @@ var routes = [
     component: UploadFile,
     layout: "/admin",
   },
-  {
-    path: "/login",
-    name: "Login",
-    icon: "ni ni-key-25 text-info",
-    component: Login,
-    layout: "/auth",
-  },
+  // {
+  //   path: "/login",
+  //   name: "Login",
+  //   icon: "ni ni-key-25 text-info",
+  //   component: Login,
+  //   layout: "/auth",
+  // },
   {
     path: "/login",
     name: "Logout",

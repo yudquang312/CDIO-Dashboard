@@ -1,9 +1,11 @@
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
+import { Redirect, useHistory } from "react-router-dom";
 
 export const GlobalState = createContext();
 
 export const DataProvider = ({ children }) => {
+	const history = useHistory();
 	const [token, setToken] = useState("");
 	const [isLogin, setIsLogin] = useState(false);
 	const [loading, setLoading] = useState(true);
@@ -20,6 +22,8 @@ export const DataProvider = ({ children }) => {
 				setLoading(false);
 			};
 			refreshToken();
+		} else {
+			history.push("/auth/login");
 		}
 	}, [isLogin]);
 

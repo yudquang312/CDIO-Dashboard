@@ -41,6 +41,9 @@ function Login(props) {
 				localStorage.setItem("firstLogin", true);
 				setIsLogin(true);
 				history.push("/");
+			})
+			.catch((err) => {
+				console.log(err.response.data.msg);
 			});
 		// if (res?.data?.users?.length) {
 		// 	this.setState({ checkLogin: true });
