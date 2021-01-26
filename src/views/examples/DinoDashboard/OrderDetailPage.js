@@ -111,7 +111,11 @@ export default function OrderDetail() {
       .put(ORDER_ENDPOINT + orderId, { status: status })
       .then(({ data }) => {
         console.log("data", data);
-        message.success("Update order successful");
+        if (data.msg !== "Update status success") {
+          message.warning(data.msg);
+        } else {
+          message.success("Update order successful");
+        }
         fetchData(ORDER_ENDPOINT + orderId, setOrder);
       })
       .catch((err) => {

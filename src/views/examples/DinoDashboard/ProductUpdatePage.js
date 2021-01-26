@@ -208,7 +208,7 @@ export default function ProductUpdatePage() {
               <CardHeader className="border-0">
                 <Row className="align-items-center">
                   <div className="col">
-                    <h1 className="mb-0">Detail Product</h1>
+                    <h2 className="mb-0">Detail Product</h2>
                   </div>
                 </Row>
               </CardHeader>

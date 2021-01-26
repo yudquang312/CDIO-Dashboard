@@ -14,11 +14,7 @@ import {
   CardHeader,
 } from "reactstrap";
 
-import {
-  message,
-  Select,
-  Tag,
-} from "antd";
+import { message, Select, Tag } from "antd";
 import UploadImage from "./UploadImage";
 import {
   PRODUCT_ENDPOINT,
@@ -197,7 +193,7 @@ export default function ProductPage() {
               <CardHeader className="border-0">
                 <Row className="align-items-center">
                   <div className="col">
-                    <h1 className="mb-0">Create Product</h1>
+                    <h2 className="mb-0">Create Product</h2>
                   </div>
                 </Row>
               </CardHeader>

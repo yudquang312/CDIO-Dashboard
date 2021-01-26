@@ -70,7 +70,7 @@ export default function UserDetail() {
               <CardHeader className="border-0">
                 <Row className="align-items-center">
                   <div className="col">
-                    <h1 className="mb-0">User Detail</h1>
+                    <h2 className="mb-0">User Detail</h2>
                   </div>
                 </Row>
               </CardHeader>

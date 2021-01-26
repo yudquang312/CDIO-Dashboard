@@ -206,7 +206,7 @@ export default function ColorPage() {
               <CardHeader className="border-0">
                 <Row className="align-items-center">
                   <div className="col">
-                    <h3 className="mb-0">Colors</h3>
+                    <h2 className="mb-0">Colors</h2>
                   </div>
                   <div className="col text-right">
                     <Button color="primary" onClick={handleDisplay} size="sm">

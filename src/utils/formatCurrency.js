@@ -1,5 +1,5 @@
 const formatCurrency = (money) => {
-  console.log(money);
+  // console.log(money);
   let str = money + "";
   let res = "";
   for (let i = 0; i < str.length; i++) {

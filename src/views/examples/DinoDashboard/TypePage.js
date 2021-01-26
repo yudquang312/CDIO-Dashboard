@@ -179,7 +179,7 @@ export default function Styles() {
               <CardHeader className="border-0">
                 <Row className="align-items-center">
                   <div className="col">
-                    <h3 className="mb-0">Types</h3>
+                    <h2 className="mb-0">Types</h2>
                   </div>
                   <div className="col text-right">
                     <Button color="primary" onClick={handleDisplay} size="sm">

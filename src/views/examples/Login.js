@@ -39,8 +39,11 @@ function Login() {
         password: passwordRef.current.value,
       })
       .then((res) => {
-        sessionStorage.setItem("isLogged", true);
-        setCheckLogin(true);
+        console.log(res.data?.user);
+        if (res.data?.user?.role) {
+          sessionStorage.setItem("isLogged", true);
+          setCheckLogin(true);
+        }
       })
       .catch((err) => {
         console.error(err);
