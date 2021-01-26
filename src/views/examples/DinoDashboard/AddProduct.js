@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+
 import {
   Container,
   Col,
@@ -15,7 +15,7 @@ import {
 } from "reactstrap";
 
 import { message, Select, Tag } from "antd";
-import UploadImage from "./UploadImage";
+import Image from "./Image";
 import {
   PRODUCT_ENDPOINT,
   TYPE_PRODUCT_ENDPOINT,
@@ -65,6 +65,44 @@ export default function ProductPage() {
         {value.name}
       </Select.Option>
     ));
+  };
+
+  const uploadImage = async (e) => {
+    e.preventDefault();
+    const files = e.target.files;
+    console.log(files);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const uploadCloud = (files) =>
+        new Promise(async (resolve, reject) => {
+          const file = files[0];
+          let formData = new FormData();
+          formData.append("file", file);
+          const res = await axios.post(
+            "http://localhost:3001/api/upload_single",
+            formData,
+            config
+          );
+          resolve(res.data.url);
+        })
+          .then((result) => result)
+          .catch((err) => console.log(err));
+      const data = await uploadCloud(files);
+      console.log(data);
+      setImages([...images, data]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const deleteImage = (index) => () => {
+    const imagesTemp = [...images];
+    imagesTemp.splice(index, 1);
+    setImages(imagesTemp);
   };
 
   const tagRender = (props) => {
@@ -192,21 +230,41 @@ export default function ProductPage() {
                   <div className="col">
                     <h2 className="mb-0">Create Product</h2>
                   </div>
-                  <div>
-                    <Link to="/admin/manage-product-new/add">
-                      <Button>New</Button>
-                    </Link>
-                  </div>
                 </Row>
               </CardHeader>
               <Container fluid>
                 <Form>
                   <FormGroup>
                     <Label>Images</Label>
-                    <UploadImage
-                      images={images ? images : []}
-                      setImages={setImages}
-                    />
+                    <div>
+                      {images.map((image, index) => (
+                        <Image
+                          imageUrl={image}
+                          key={Math.random() * 1000 + ""}
+                          onDelete={deleteImage(index)}
+                        />
+                      ))}
+                      {images.length < 4 ? (
+                        <div
+                          style={{
+                            width: "170px",
+                            height: "170px",
+                            margin: "0 5px",
+                            position: "relative",
+                            display: "inline-block",
+                          }}
+                        >
+                          <input
+                            type="file"
+                            id="file"
+                            name="file"
+                            onChange={uploadImage}
+                            className="inputFile"
+                          />
+                          <label for="file">+ Upload</label>
+                        </div>
+                      ) : null}
+                    </div>
                   </FormGroup>
                   <FormGroup>
                     <Label for="name">Name</Label>

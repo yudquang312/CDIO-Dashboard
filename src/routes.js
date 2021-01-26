@@ -13,6 +13,8 @@ import UploadFile from "views/examples/DinoDashboard/UploadFile";
 import UserPage from "views/examples/DinoDashboard/UserPage";
 import UserDetailPage from "views/examples/DinoDashboard/UserDetailPage";
 import OrderDetailPage from "views/examples/DinoDashboard/OrderDetailPage";
+import AddProduct from "views/examples/DinoDashboard/AddProduct";
+import UpdateProduct from "views/examples/DinoDashboard/UpdateProduct";
 
 var routes = [
   {
@@ -43,6 +45,22 @@ var routes = [
     name: "Product",
     icon: "ni ni-bullet-list-67 text-red",
     component: ProductUpdatePage,
+    layout: "/admin",
+    hide: true,
+  },
+  {
+    path: "/manage-product-new/add",
+    name: "Product",
+    icon: "ni ni-bullet-list-67 text-red",
+    component: AddProduct,
+    layout: "/admin",
+    hide: true,
+  },
+  {
+    path: "/manage-product-new/:productId",
+    name: "Product",
+    icon: "ni ni-bullet-list-67 text-red",
+    component: UpdateProduct,
     layout: "/admin",
     hide: true,
   },

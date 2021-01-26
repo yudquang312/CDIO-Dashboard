@@ -81,7 +81,7 @@ export default function ProductPage() {
       key: "_id",
       fixed: "left",
       render: (id) => (
-        <Link to={"/admin/manage-product/" + id}>{id.slice(-8)}</Link>
+        <Link to={"/admin/manage-product-new/" + id}>{id.slice(-8)}</Link>
       ),
       onFilter: (value, record) => record.name.indexOf(value) === 0,
     },
@@ -150,7 +150,7 @@ export default function ProductPage() {
       width: 150,
       render: (text, product) => (
         <Space size="small">
-          <Link to={"/admin/manage-product/" + product._id}>
+          <Link to={"/admin/manage-product-new/" + product._id}>
             <Button size="sm">View</Button>
           </Link>
           <Popconfirm
@@ -202,7 +202,7 @@ export default function ProductPage() {
                 <Row className="align-items-center">
                   <div className="col">
                     <h2 className="mb-0">Products</h2>
-                    <Link to="/admin/manage-product/add">
+                    <Link to="/admin/manage-product-new/add">
                       <Button color="primary" size="md">
                         Create
                       </Button>

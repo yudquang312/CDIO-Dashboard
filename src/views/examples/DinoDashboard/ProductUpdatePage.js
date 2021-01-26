@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import {
   Container,
   Col,
@@ -47,8 +47,13 @@ export default function ProductUpdatePage() {
     inputPrice: 300000,
     salePrice: 450000,
     createBy: "5fbe0aca81bd88108607f69b",
+    images: [
+      "https://res.cloudinary.com/thaovan/image/upload/v1611683329/Dinosuar_shop/products/hkfpsyhgvuhhjdbp3p9m.jpg",
+    ],
   });
-  const [images, setImages] = React.useState([]);
+  const [images, setImages] = React.useState([
+    "https://res.cloudinary.com/thaovan/image/upload/v1611683329/Dinosuar_shop/products/hkfpsyhgvuhhjdbp3p9m.jpg",
+  ]);
   const [style, setStyle] = React.useState("");
   const [type, setType] = React.useState("");
   const [material, setMaterial] = React.useState("");
@@ -210,15 +215,19 @@ export default function ProductUpdatePage() {
                   <div className="col">
                     <h2 className="mb-0">Detail Product</h2>
                   </div>
+                  <Link to={"/admin/manage-product-new/" + productId}>
+                    <Button>New</Button>
+                  </Link>
                 </Row>
               </CardHeader>
               <Container fluid>
                 <Form>
                   <FormGroup>
                     <Label>Images</Label>
-                    {images?.length && (
-                      <UploadImage images={images} setImages={setImages} />
-                    )}
+                    <UploadImage
+                      images={images ? images : []}
+                      setImages={setImages}
+                    />
                   </FormGroup>
                   <FormGroup>
                     <Label for="name">Name</Label>

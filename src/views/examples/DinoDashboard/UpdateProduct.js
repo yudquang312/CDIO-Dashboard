@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   Container,
   Col,
@@ -13,9 +13,19 @@ import {
   Card,
   CardHeader,
 } from "reactstrap";
+import Image from "./Image";
 
-import { message, Select, Tag } from "antd";
-import UploadImage from "./UploadImage";
+import {
+  // Modal,
+  message,
+  // Popconfirm,
+  Select,
+  Tag,
+  // Form as FormAntd,
+} from "antd";
+// import UploadImage from "./UploadImage";
+// import Header from "components/Headers/Header.js";
+// import formatDate from "../../../utils/index.js";
 import {
   PRODUCT_ENDPOINT,
   TYPE_PRODUCT_ENDPOINT,
@@ -26,7 +36,9 @@ import {
   SIZE_ENDPOINT,
 } from "../../../constants/endpoint";
 
-export default function ProductPage() {
+export default function ProductUpdatePage() {
+  const { productId } = useParams();
+  console.log(productId);
   const [product, setProduct] = React.useState({
     name: "LUCKY LUKE PATTAS - LL MORRIS WHITE",
     code: "A61094",
@@ -36,6 +48,9 @@ export default function ProductPage() {
     inputPrice: 300000,
     salePrice: 450000,
     createBy: "5fbe0aca81bd88108607f69b",
+    images: [
+      "https://res.cloudinary.com/thaovan/image/upload/v1611683329/Dinosuar_shop/products/hkfpsyhgvuhhjdbp3p9m.jpg",
+    ],
   });
   const [images, setImages] = React.useState([
     "https://res.cloudinary.com/thaovan/image/upload/v1611683329/Dinosuar_shop/products/hkfpsyhgvuhhjdbp3p9m.jpg",
@@ -67,6 +82,44 @@ export default function ProductPage() {
     ));
   };
 
+  const uploadImage = async (e) => {
+    e.preventDefault();
+    const files = e.target.files;
+    console.log(files);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const uploadCloud = (files) =>
+        new Promise(async (resolve, reject) => {
+          const file = files[0];
+          let formData = new FormData();
+          formData.append("file", file);
+          const res = await axios.post(
+            "http://localhost:3001/api/upload_single",
+            formData,
+            config
+          );
+          resolve(res.data.url);
+        })
+          .then((result) => result)
+          .catch((err) => console.log(err));
+      const data = await uploadCloud(files);
+      console.log(data);
+      setImages([...images, data]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const deleteImage = (index) => () => {
+    const imagesTemp = [...images];
+    imagesTemp.splice(index, 1);
+    setImages(imagesTemp);
+  };
+
   const tagRender = (props) => {
     const { label, onClose } = props;
     // console.log(props);
@@ -81,9 +134,9 @@ export default function ProductPage() {
     );
   };
 
-  const handleCreate = async () => {
+  const handleUpdate = async () => {
     axios
-      .post(PRODUCT_ENDPOINT, {
+      .put(PRODUCT_ENDPOINT + product._id, {
         ...product,
         colors: color,
         style: style,
@@ -100,11 +153,10 @@ export default function ProductPage() {
         images: images,
       })
       .then(() => {
-        message.success("Create product successful");
+        message.success("Update product successful");
       })
       .catch((err) => {
         console.log(err);
-        message.error("Create product failed");
       });
   };
 
@@ -126,13 +178,31 @@ export default function ProductPage() {
   };
 
   React.useEffect(() => {
+    fetchData(SIZE_ENDPOINT, setSizes);
     fetchData(MATERIAL_ENDPOINT, setMaterials);
     fetchData(STYLE_ENDPOINT, setStyles);
     fetchData(TYPE_PRODUCT_ENDPOINT, setProductTypes);
     fetchData(CATEGORY_ENDPOINT, setCategories);
     fetchData(COLOR_ENDPOINT, setColors);
-    fetchData(SIZE_ENDPOINT, setSizes);
-  }, []);
+    fetchData(PRODUCT_ENDPOINT + productId, setProduct);
+  }, [productId]);
+
+  React.useEffect(() => {
+    console.log(product.colors);
+    setImages(product?.images);
+    setColor(product?.colors?.map((color) => color._id));
+    setType(product?.type?._id);
+    setCategory(product?.category?._id);
+    setMaterial(product?.material?._id);
+    setStyle(product?.style?._id);
+    setSizeAmount((current) => ({
+      ...current,
+      ...product?.sizes?.reduce((obj, size) => {
+        obj[size.sizeId._id] = size.amount;
+        return obj;
+      }, []),
+    }));
+  }, [product]);
 
   React.useEffect(() => {
     setSizeAmount(
@@ -152,15 +222,7 @@ export default function ProductPage() {
 
   const fillSizes = () => {
     return sizes.map((size) => (
-      <Col
-        key={size._id}
-        xs={6}
-        sm={4}
-        md={2}
-        lg={2}
-        xl={2}
-        // className="mb-4"
-      >
+      <Col key={size._id} xs={6} sm={4} md={2} lg={2} xl={2}>
         <Label for={size._id}>{size.name}</Label>
         <Input
           type="number"
@@ -190,12 +252,7 @@ export default function ProductPage() {
               <CardHeader className="border-0">
                 <Row className="align-items-center">
                   <div className="col">
-                    <h2 className="mb-0">Create Product</h2>
-                  </div>
-                  <div>
-                    <Link to="/admin/manage-product-new/add">
-                      <Button>New</Button>
-                    </Link>
+                    <h2 className="mb-0">Detail Product</h2>
                   </div>
                 </Row>
               </CardHeader>
@@ -203,10 +260,35 @@ export default function ProductPage() {
                 <Form>
                   <FormGroup>
                     <Label>Images</Label>
-                    <UploadImage
-                      images={images ? images : []}
-                      setImages={setImages}
-                    />
+                    <div>
+                      {images.map((image, index) => (
+                        <Image
+                          imageUrl={image}
+                          key={Math.random() * 1000 + ""}
+                          onDelete={deleteImage(index)}
+                        />
+                      ))}
+                      {images.length < 4 ? (
+                        <div
+                          style={{
+                            width: "170px",
+                            height: "170px",
+                            margin: "0 5px",
+                            position: "relative",
+                            display: "inline-block",
+                          }}
+                        >
+                          <input
+                            type="file"
+                            id="file"
+                            name="file"
+                            onChange={uploadImage}
+                            className="inputFile"
+                          />
+                          <label for="file">+ Upload</label>
+                        </div>
+                      ) : null}
+                    </div>
                   </FormGroup>
                   <FormGroup>
                     <Label for="name">Name</Label>
@@ -362,7 +444,7 @@ export default function ProductPage() {
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Button onClick={handleCreate}>Create</Button>
+                    <Button onClick={handleUpdate}>Update</Button>
                   </FormGroup>
                 </Form>
               </Container>
