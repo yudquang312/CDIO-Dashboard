@@ -52,6 +52,10 @@ export default function ProductUpdatePage() {
       "https://res.cloudinary.com/thaovan/image/upload/v1611683329/Dinosuar_shop/products/hkfpsyhgvuhhjdbp3p9m.jpg",
     ],
   });
+  const [name, setName] = React.useState("");
+  const [code, setCode] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const [salePrice, setSalePrice] = React.useState(0);
   const [images, setImages] = React.useState([
     "https://res.cloudinary.com/thaovan/image/upload/v1611683329/Dinosuar_shop/products/hkfpsyhgvuhhjdbp3p9m.jpg",
   ]);
@@ -151,6 +155,10 @@ export default function ProductUpdatePage() {
           return totalAmount + sizeAmount[id];
         }, 0),
         images: images,
+        name: name,
+        salePrice: salePrice,
+        description: description,
+        code: code,
       })
       .then(() => {
         message.success("Update product successful");
@@ -160,10 +168,10 @@ export default function ProductUpdatePage() {
       });
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e, setState) => {
     console.log(e.target.value);
     // console.log(e.target.value);
-    setProduct({ ...product, [e.target.id]: e.target.value });
+    setState(e.target.value);
   };
 
   const handleSelectChange = (value, setState) => {
@@ -189,6 +197,12 @@ export default function ProductUpdatePage() {
 
   React.useEffect(() => {
     console.log(product.colors);
+
+    setName(product?.name);
+    setDescription(product?.description);
+    setCode(product?.code);
+    setSalePrice(product?.salePrice);
+
     setImages(product?.images);
     setColor(product?.colors?.map((color) => color._id));
     setType(product?.type?._id);
@@ -297,8 +311,8 @@ export default function ProductUpdatePage() {
                       name="name"
                       id="name"
                       placeholder="Enter product name"
-                      value={product.name ? product.name : ""}
-                      onChange={handleChange}
+                      value={name}
+                      onChange={(e) => handleChange(e, setName)}
                     />
                   </FormGroup>
                   <FormGroup>
@@ -310,8 +324,8 @@ export default function ProductUpdatePage() {
                           name="code"
                           id="code"
                           placeholder="Enter product code"
-                          value={product.code ? product.code : ""}
-                          onChange={handleChange}
+                          value={code}
+                          onChange={(e) => handleChange(e, setCode)}
                         />
                       </Col>
                       <Col xs={12} sm={12} md={6}>
@@ -321,8 +335,8 @@ export default function ProductUpdatePage() {
                           name="salePrice"
                           id="salePrice"
                           placeholder="Enter product code"
-                          value={product.salePrice ? product.salePrice : 0}
-                          onChange={handleChange}
+                          value={salePrice}
+                          onChange={(e) => handleChange(e, setSalePrice)}
                         />
                       </Col>
                     </Row>
@@ -330,7 +344,7 @@ export default function ProductUpdatePage() {
                   <FormGroup>
                     <Row>
                       <Col xs={12} sm={6} md={3} lg={3}>
-                        <Label for="description">Type</Label>
+                        <Label for="type">Type</Label>
                         <Select
                           showSearch
                           style={{ width: "100%" }}
@@ -371,7 +385,7 @@ export default function ProductUpdatePage() {
                         </Select>
                       </Col>
                       <Col xs={12} sm={6} md={3} lg={3}>
-                        <Label for="description">Material</Label>
+                        <Label for="material">Material</Label>
                         <Select
                           showSearch
                           style={{ width: "100%" }}
@@ -391,7 +405,7 @@ export default function ProductUpdatePage() {
                         </Select>
                       </Col>
                       <Col xs={12} sm={6} md={3} lg={3}>
-                        <Label for="description">Style</Label>
+                        <Label for="style">Style</Label>
                         <Select
                           showSearch
                           style={{ width: "100%" }}
@@ -439,8 +453,8 @@ export default function ProductUpdatePage() {
                       name="text"
                       id="description"
                       placeholder="Enter product description"
-                      value={product.description}
-                      onChange={handleChange}
+                      value={description}
+                      onChange={(e) => handleChange(e, setDescription)}
                     />
                   </FormGroup>
                   <FormGroup>

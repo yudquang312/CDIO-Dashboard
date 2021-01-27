@@ -92,6 +92,37 @@ export default function ProductPage() {
       width: 300,
     },
     {
+      title: "Images",
+      dataIndex: "images",
+      key: "images",
+      width: 500,
+      render: (images) => (
+        <div>
+          {images.map((image) => (
+            <div
+              style={{
+                display: "inline-block",
+                padding: "5px",
+                margin: "5px",
+                width: "100px",
+                height: "100px",
+                cursor: "pointer",
+                border: "1px solid #d9d9d9",
+              }}
+            >
+              <img
+                src={image}
+                alt="cannotLoading"
+                width="90"
+                height="90"
+                loading="lazy"
+              ></img>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+    {
       title: "Code",
       dataIndex: "code",
       key: "code",
@@ -305,7 +336,7 @@ export default function ProductPage() {
                   .filter(filterMaterial)
                   .filter(filterType)
                   .filter(filterCategory)}
-                scroll={{ x: 1500 }}
+                scroll={{ x: 1700 }}
                 onChange={onChange}
               />
             </Card>
