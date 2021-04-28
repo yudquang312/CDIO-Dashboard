@@ -1,7 +1,8 @@
 import React from "react";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
-
+import {queryData} from "../../common";
+import {LOGIN} from "../../query/user"
 // reactstrap components
 import {
   Button,
@@ -14,7 +15,6 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroup,
-  // Row,
   Col,
 } from "reactstrap";
 
@@ -33,6 +33,7 @@ function Login() {
     e.preventDefault();
     console.log("QUANG");
     console.log(userNameRef.current.value, passwordRef.current.value);
+    console.log(await queryData(LOGIN, {phone: "0964555151", password: "Duyquang01", type: true}))
     axios
       .post("http://localhost:3001/user/login/", {
         email: userNameRef.current.value,

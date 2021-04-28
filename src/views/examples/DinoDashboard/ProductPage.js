@@ -80,16 +80,15 @@ export default function ProductPage() {
       dataIndex: "_id",
       key: "_id",
       fixed: "left",
-      render: (id) => (
-        <Link to={"/admin/manage-product-new/" + id}>{id.slice(-8)}</Link>
-      ),
+      render: (id) => <strong>{id.slice(-8)}</strong>,
       onFilter: (value, record) => record.name.indexOf(value) === 0,
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      width: 300,
+      width: 250,
+      render: (name) => <strong>{name}</strong>,
     },
     {
       title: "Images",

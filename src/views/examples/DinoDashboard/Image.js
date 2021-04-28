@@ -108,7 +108,7 @@ const Image = ({ imageUrl, onDelete }) => {
         </span>
       </div>
       <Modal
-        title="Avatar"
+        title="Image"
         visible={isModalVisible}
         onOk={false}
         okText={null}
