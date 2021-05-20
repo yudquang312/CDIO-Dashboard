@@ -1,6 +1,5 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import {
   Container,
   Col,
@@ -12,6 +11,8 @@ import {
   Card,
   CardHeader,
 } from "reactstrap";
+import { GET_USERS_BY_ID } from "../../../query/user";
+import { queryData } from "../../../common";
 
 import {
   Modal,
@@ -23,24 +24,20 @@ import {
   // Form as FormAntd,
 } from "antd";
 
-// import { USER_ENDPOINT } from "../../../constants/endpoint";
-
-const ENDPOINT = "http://localhost:3001/user/admin/";
-
 export default function UserDetail() {
   const { userId } = useParams();
   const [user, setUser] = React.useState({ product: [] });
   const [isModalVisible, setIsModalVisible] = React.useState(false);
 
-  const fetchData = async (endpoint, setState) => {
-    const { data } = await axios.get(endpoint);
-    console.log(endpoint, data);
-    setState(data);
+  const fetchData = async () => {
+    queryData(GET_USERS_BY_ID, { id: userId }).then(({ data: { user } }) => {
+      setUser(user);
+    });
   };
 
   React.useEffect(() => {
-    fetchData(ENDPOINT + userId, setUser);
-  }, [userId]);
+    fetchData();
+  }, []);
 
   const onCancel = () => {
     setIsModalVisible(false);
@@ -49,17 +46,6 @@ export default function UserDetail() {
   const onPreview = async () => {
     setIsModalVisible(true);
   };
-  // const fillFileList = () =>
-  //   user.avatar
-  //     ? [
-  //         {
-  //           uid: Math.random() * 10000 + "",
-  //           name: "image.png",
-  //           status: "done",
-  //           url: user.avatar,
-  //         },
-  //       ]
-  //     : [];
 
   return (
     <>
@@ -148,17 +134,7 @@ export default function UserDetail() {
                   <FormGroup>
                     <Label>Address</Label>
                     <Input
-                      defaultValue={
-                        user.address
-                          ? user.address +
-                            ", " +
-                            user.wards +
-                            ", " +
-                            user.district +
-                            ", " +
-                            user.nation
-                          : ""
-                      }
+                      defaultValue={user.address ? user.address : ""}
                       disabled
                     />
                   </FormGroup>

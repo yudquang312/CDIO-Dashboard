@@ -1,41 +1,42 @@
 import {
   ApolloClient,
   ApolloLink,
+  HttpLink,
   InMemoryCache,
   concat,
   split,
-} from '@apollo/client';
-import IP from '../ip.js';
-import {getMainDefinition} from '@apollo/client/utilities';
-import {WebSocketLink} from '@apollo/client/link/ws';
-import {createUploadLink} from 'apollo-upload-client';
-const url = `${IP}:3000`;
-const httpLink = createUploadLink({uri: `${url}/graphql`});
+} from "@apollo/client";
+import { getMainDefinition } from "@apollo/client/utilities";
+import { WebSocketLink } from "@apollo/client/link/ws";
+import { createUploadLink } from "apollo-upload-client";
+const url = `https://serverdino.herokuapp.com`;
+const httpLink = createUploadLink({ uri: `${url}/graphql` });
 
 const wsLink = new WebSocketLink({
-  uri: 'ws://192.168.1.10:3000/subscriptions',
+  uri: `ws://serverdino.herokuapp.com/subscriptions`,
   options: {
     reconnect: true,
   },
 });
 
 const splitLink = split(
-  ({query}) => {
+  ({ query }) => {
     const definition = getMainDefinition(query);
     return (
-      definition.kind === 'OperationDefinition' &&
-      definition.operation === 'subscription'
+      definition.kind === "OperationDefinition" &&
+      definition.operation === "subscription"
     );
   },
   wsLink,
-  httpLink,
+  httpLink
 );
 
 const authMiddleware = new ApolloLink(async (operation, forward) => {
   operation.setContext({
     headers: {
-      authorization: localStorage.getItem('token'),
-      refresh_token: localStorage.getItem('refreshToken'),
+      authorization: localStorage.getItem("token"),
+      refresh_token: localStorage.getItem("refreshToken"),
+      "Access-Control-Allow-Origin": "*",
     },
   });
   return forward(operation);

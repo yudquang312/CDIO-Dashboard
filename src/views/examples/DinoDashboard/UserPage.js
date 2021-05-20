@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import {
   Container,
@@ -10,46 +9,56 @@ import {
   Button,
   Input,
 } from "reactstrap";
-
-import { Table as TableAntd, Popconfirm, message, Space } from "antd";
+import { GET_USERS } from "../../../query/user";
+import { queryData } from "../../../common";
+import { Table as TableAntd, Popconfirm, message, Space, Tag } from "antd";
 import formatDate from "../../../utils/index.js";
-import { USER_ENDPOINT } from "../../../constants/endpoint.js";
-
-const END_POINT = USER_ENDPOINT;
 
 export default function UserPage() {
   const [users, setUsers] = React.useState([]);
   const [filter, setFilter] = React.useState("");
 
-  const fetchData = async (endpoint, setState) => {
-    const { data } = await axios.get(endpoint);
-    console.log(data);
-    setState(data);
+  const fetchData = async () => {
+    queryData(GET_USERS)
+      .then(({ data: { users } }) => {
+        console.log(users);
+        setUsers(users);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   React.useEffect(() => {
-    fetchData(END_POINT, setUsers);
+    fetchData();
   }, []);
 
   function cancel(e) {}
   function confirmDelete(id) {
-    axios
-      .delete("http://localhost:3001/user/delete/" + id)
-      .then((res) => {
-        console.log(res);
-        message.success("Delete successful.");
-        fetchData(END_POINT, setUsers);
-      })
-      .catch((err) => {
-        console.log(err);
-        message.error("Delete failed.");
-      });
+    message.error("Delete failed.");
+    // axios
+    //   .delete("http://localhost:3001/user/delete/" + id)
+    //   .then((res) => {
+    //     console.log(res);
+    //     message.success("Delete successful.");
+    //     fetchData();
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     message.error("Delete failed.");
+    //   });
   }
+  const roleTag = {
+    ADMIN: "warning",
+    STORE: "processing",
+    MEMBER: "success",
+  };
+
   const columns = [
     {
       title: "ID",
-      dataIndex: "_id",
-      key: "_id",
+      dataIndex: "id",
+      key: "id",
       render: (id) => (
         <Link to={"/admin/manage-user/" + id}>{id.slice(-8)}</Link>
       ),
@@ -63,6 +72,17 @@ export default function UserPage() {
       title: "Email",
       dataIndex: "email",
       key: "email",
+    },
+    {
+      title: "Phone",
+      dataIndex: "phone",
+      key: "phone",
+    },
+    {
+      title: "Role",
+      dataIndex: "role",
+      key: "role",
+      render: (role) => <Tag color={roleTag[role]}>{role}</Tag>,
     },
     {
       title: "Created At",
@@ -83,12 +103,12 @@ export default function UserPage() {
       width: 90,
       render: (text, user) => (
         <Space size="small">
-          <Link to={"/admin/manage-user/" + user._id}>
+          <Link to={"/admin/manage-user/" + user.id}>
             <Button size="sm">View</Button>
           </Link>
           <Popconfirm
             title="Are you sure to delete this user?"
-            onConfirm={() => confirmDelete(user._id)}
+            onConfirm={() => confirmDelete(user.id)}
             onCancel={cancel}
             okText="Yes"
             cancelText="No"
@@ -103,7 +123,7 @@ export default function UserPage() {
   ];
   const filterCallback = (element) => {
     return (
-      element._id.toLowerCase().includes(filter) ||
+      element.id.toLowerCase().includes(filter) ||
       element.email.toLowerCase().includes(filter) ||
       element.name.toLowerCase().includes(filter)
     );

@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const LOGIN = gql`
   query login(
@@ -16,91 +16,6 @@ export const LOGIN = gql`
         avatar
         email
         address
-        likes {
-          id
-          amount
-          price
-          images
-          book {
-            id
-            name
-            images
-          }
-          name
-          sold
-        }
-        store {
-          id
-          name
-          description
-        }
-        cart {
-          book {
-            id
-            amount
-            price
-            images
-            book {
-              id
-              name
-              images
-            }
-            name
-          }
-          amount
-          price
-        }
-        notifications {
-          order {
-            id
-            title
-            description
-            order {
-              id
-            }
-            seen
-            createdAt
-            updatedAt
-          }
-          book {
-            id
-            title
-            description
-            commentBook {
-              id
-              content
-              book {
-                id
-              }
-              author {
-                name
-              }
-              type
-              createdAt
-            }
-            seen
-            createdAt
-          }
-          post {
-            id
-            title
-            description
-            commentPost {
-              id
-              content
-              post {
-                id
-              }
-              author {
-                name
-              }
-              type
-              createdAt
-            }
-            seen
-            createdAt
-          }
-        }
       }
       token
       refreshToken
@@ -376,11 +291,40 @@ export const CHECK_OTP_FORGOT = gql`
   }
 `;
 
-
 export const RESET_PASSWORD = gql`
   mutation resetPassword($token: String!, $password: String!) {
     resetPassword(token: $token, password: $password) {
       message
     }
   }
-`
+`;
+
+export const GET_USERS = gql`
+  query users {
+    users {
+      id
+      name
+      email
+      phone
+      role
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const GET_USERS_BY_ID = gql`
+  query user($id: ID!) {
+    user(id: $id) {
+      id
+      name
+      email
+      phone
+      address
+      avatar
+      role
+      createdAt
+      updatedAt
+    }
+  }
+`;

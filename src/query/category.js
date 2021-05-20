@@ -1,10 +1,12 @@
-import {gql} from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const GET_CATEGORIES = gql`
   query categories {
     categories {
       id
       name
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -49,7 +51,7 @@ export const GET_BOOKS_CATEGORIES = gql`
 `;
 
 export const CREATE_CATEGORY = gql`
-  query createCategory($name: String!) {
+  mutation createCategory($name: String!) {
     createCategory(name: $name) {
       message
     }
@@ -57,16 +59,16 @@ export const CREATE_CATEGORY = gql`
 `;
 
 export const UPDATE_CATEGORY = gql`
-  query createCategory($id: ID!, $name: String) {
-    createCategory(id: $id, name: $name) {
+  mutation updateCategory($id: String!, $name: String) {
+    updateCategory(id: $id, name: $name) {
       message
     }
   }
 `;
-
+// t de nham me cai type id roi
 export const DELETE_CATEGORY = gql`
-  query deleteCategory($id: ID!) {
-    deleteCategory {
+  mutation deleteCategory($id: ID!) {
+    deleteCategory(id: $id) {
       message
     }
   }

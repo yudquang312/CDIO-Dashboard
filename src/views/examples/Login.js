@@ -1,8 +1,7 @@
 import React from "react";
-import axios from "axios";
 import { Redirect } from "react-router-dom";
-import {queryData} from "../../common";
-import {LOGIN} from "../../query/user"
+import { queryData } from "../../common";
+import { LOGIN } from "../../query/user";
 // reactstrap components
 import {
   Button,
@@ -31,23 +30,20 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("QUANG");
-    console.log(userNameRef.current.value, passwordRef.current.value);
-    console.log(await queryData(LOGIN, {phone: "0964555151", password: "Duyquang01", type: true}))
-    axios
-      .post("http://localhost:3001/user/login/", {
-        email: userNameRef.current.value,
-        password: passwordRef.current.value,
-      })
-      .then((res) => {
-        console.log(res.data?.user);
-        if (res.data?.user?.role) {
-          sessionStorage.setItem("isLogged", true);
-          setCheckLogin(true);
-        }
+    queryData(LOGIN, {
+      email: "huydoan@gmail.com",
+      password: "ta210402",
+      type: false,
+    })
+      .then(({ data: { login } }) => {
+        console.log(login);
+        sessionStorage.setItem("isLogged", true);
+        localStorage.setItem("token", login.token);
+        localStorage.setItem("refreshToken", login.refreshToken);
+        setCheckLogin(true);
       })
       .catch((err) => {
-        console.error(err);
+        console.log(err);
       });
   };
   return (

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import {
   Container,
   Col,
@@ -14,29 +13,38 @@ import {
 } from "reactstrap";
 import { Modal, message, Popconfirm, Table as TableAntd, Space } from "antd";
 import formatDate from "../../../utils/index.js";
-import { CATEGORY_ENDPOINT } from "../../../constants/endpoint.js";
-
-const END_POINT = CATEGORY_ENDPOINT;
+import { queryData, mutateData } from "../../../common";
+import {
+  GET_CATEGORIES,
+  CREATE_CATEGORY,
+  UPDATE_CATEGORY,
+  DELETE_CATEGORY,
+} from "../../../query/category";
 
 export default function Styles() {
   const [categories, setCategories] = React.useState([]);
   const [modalContent, setModalContent] = React.useState({
     create: false,
-    _id: "",
+    id: "",
     name: "",
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const fetchData = async () => {
-    const { data } = await axios.get(END_POINT);
-    console.log(data);
-    setCategories(data);
+    queryData(GET_CATEGORIES)
+      .then(({ data: { categories: dataCategories } }) => {
+        console.log(dataCategories);
+        setCategories(dataCategories);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleDisplay = () => {
     setModalContent({
       create: true,
-      _id: "",
+      id: "",
       name: "",
     });
     setIsModalVisible(true);
@@ -58,8 +66,7 @@ export default function Styles() {
   };
 
   const handleCreate = async () => {
-    axios
-      .post(END_POINT, modalContent)
+    mutateData(CREATE_CATEGORY, { name: modalContent.name })
       .then((res) => {
         console.log(res);
         message.success("Create successful.");
@@ -73,8 +80,10 @@ export default function Styles() {
   };
 
   const handleUpdate = async () => {
-    axios
-      .put(END_POINT + modalContent._id, modalContent)
+    mutateData(UPDATE_CATEGORY, {
+      id: modalContent.id,
+      name: modalContent.name,
+    })
       .then((res) => {
         console.log(res);
         message.success("Update successful.");
@@ -91,7 +100,7 @@ export default function Styles() {
     setIsModalVisible(false);
     setModalContent({
       create: true,
-      _id: "",
+      id: "",
       name: "",
     });
   };
@@ -105,8 +114,7 @@ export default function Styles() {
   }, [isModalVisible]);
 
   const confirmDelete = (id) => {
-    axios
-      .delete(END_POINT + id)
+    mutateData(DELETE_CATEGORY, { id: id })
       .then((res) => {
         console.log(res);
         fetchData();
@@ -123,8 +131,8 @@ export default function Styles() {
   const columns = [
     {
       title: "ID",
-      dataIndex: "_id",
-      key: "_id",
+      dataIndex: "id",
+      key: "id",
       render: (id) => id.slice(-8),
     },
     {
@@ -156,7 +164,7 @@ export default function Styles() {
           </Button>
           <Popconfirm
             title="Are you sure to delete this category?"
-            onConfirm={() => confirmDelete(category._id)}
+            onConfirm={() => confirmDelete(category.id)}
             onCancel={cancel}
             okText="Yes"
             cancelText="No"
@@ -171,7 +179,6 @@ export default function Styles() {
   ];
   return (
     <>
-      {/* <Header></Header> */}
       <Container className="mt-10 mb-10" fluid>
         <Row className="mt-10 mb-10">
           <Col className="mt-4 mb-4 ">
@@ -199,14 +206,14 @@ export default function Styles() {
                 <Form>
                   {modalContent.create ? null : (
                     <FormGroup>
-                      <Label for="_id">Id</Label>
+                      <Label for="id">Id</Label>
                       <Input
                         disabled
                         type="text"
-                        name="_id"
-                        id="_id"
+                        name="id"
+                        id="id"
                         placeholder=""
-                        value={modalContent._id}
+                        value={modalContent.id}
                         onChange={handleChange}
                         plaintext={true}
                       />
@@ -218,7 +225,7 @@ export default function Styles() {
                       type="text"
                       name="name"
                       id="name"
-                      placeholder="Enter name of color"
+                      placeholder="Enter name of category"
                       value={modalContent.name}
                       onChange={handleChange}
                     />

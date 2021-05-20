@@ -1,9 +1,9 @@
-import {Client} from '../config';
+import { Client } from "../config";
 
 export const queryData = async (
   inputQuery,
   variables = {},
-  fetchPolicy = 'no-cache',
+  fetchPolicy = "no-cache"
 ) => {
   const data = await Client.query({
     query: inputQuery,
@@ -16,10 +16,10 @@ export const queryData = async (
 export const mutateData = async (
   inputQuery,
   variables = {},
-  fetchPolicy = 'no-cache',
+  fetchPolicy = "no-cache"
 ) => {
   const data = await Client.mutate({
-    query: inputQuery,
+    mutation: inputQuery,
     variables,
     fetchPolicy,
   });

@@ -11,65 +11,55 @@ import {
   Input,
   Label,
 } from "reactstrap";
-
+import { GET_UNIQUE_BOOKS, DELETE_UNIQUE_BOOK } from "../../../query/uniqueBook";
+import { GET_CATEGORIES } from "../../../query/category";
+import { mutateData, queryData } from "../../../common";
 import { message, Popconfirm, Table as TableAntd, Space } from "antd";
-// import formatDate from "../../../utils/index.js";
-import {
-  PRODUCT_ENDPOINT,
-  TYPE_PRODUCT_ENDPOINT,
-  MATERIAL_ENDPOINT,
-  STYLE_ENDPOINT,
-  CATEGORY_ENDPOINT,
-} from "../../../constants/endpoint";
+import formatDate from "../../../utils/index.js";
 import { Link } from "react-router-dom";
 
-const END_POINT = PRODUCT_ENDPOINT;
-
 export default function ProductPage() {
-  const [products, setProducts] = React.useState([]);
-  const [productTypes, setProductTypes] = React.useState([]);
+  const [uniqueBooks, setUniqueBooks] = React.useState([]);
   const [categories, setCategories] = React.useState([]);
-  const [styles, setStyles] = React.useState([]);
-  const [materials, setMaterials] = React.useState([]);
-  const [type, setType] = React.useState("all");
   const [category, setCategory] = React.useState("all");
-  const [style, setStyle] = React.useState("all");
-  const [material, setMaterial] = React.useState("all");
   const [filter, setFilter] = React.useState("");
-  const fetchData = async (endpoint, setState) => {
-    const { data } = await axios.get(endpoint);
-    console.log(endpoint, data);
-    setState(data);
-  };
-
-  const fetchProduct = async (endpoint, setState) => {
-    const {
-      data: { products },
-    } = await axios.get(endpoint);
-    console.log("Products", products);
-    setState(products);
-  };
-
-  React.useEffect(() => {
-    fetchData(MATERIAL_ENDPOINT, setMaterials);
-    fetchData(STYLE_ENDPOINT, setStyles);
-    fetchData(TYPE_PRODUCT_ENDPOINT, setProductTypes);
-    fetchData(CATEGORY_ENDPOINT, setCategories);
-    fetchProduct(PRODUCT_ENDPOINT + "?limit=100", setProducts);
-  }, []);
-
-  function confirmDelete(id) {
-    axios
-      .delete(END_POINT + id)
-      .then((res) => {
-        console.log(res);
-        message.success("Delete successful.");
-        fetchProduct(PRODUCT_ENDPOINT + "?limit=100", setProducts);
+  const fetchCategories = async () => {
+    queryData(GET_CATEGORIES)
+      .then(({ data: { categories: dataCategories } }) => {
+        console.log(dataCategories);
+        setCategories(dataCategories);
       })
       .catch((err) => {
         console.log(err);
-        message.error("Delete failed.");
       });
+  };
+
+  const fetchUniqueBooks = async () => {
+    queryData(GET_UNIQUE_BOOKS)
+      .then(({ data: { uniqueBooks } }) => {
+        console.log(uniqueBooks);
+        setUniqueBooks(uniqueBooks);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  React.useEffect(() => {
+    fetchCategories();
+    fetchUniqueBooks();
+  }, []);
+
+  function confirmDelete(id) {
+    mutateData(DELETE_UNIQUE_BOOK, {id: id})
+    .then((res) => {
+      message.success("Delete successful.");
+      fetchUniqueBooks();
+    })
+    .catch((err) => {
+      console.log(err);
+      message.error("Delete failed.");
+    });
   }
 
   function cancel(e) {}
@@ -77,8 +67,8 @@ export default function ProductPage() {
   const columns = [
     {
       title: "ID",
-      dataIndex: "_id",
-      key: "_id",
+      dataIndex: "id",
+      key: "id",
       fixed: "left",
       render: (id) => <strong>{id.slice(-8)}</strong>,
       onFilter: (value, record) => record.name.indexOf(value) === 0,
@@ -115,6 +105,7 @@ export default function ProductPage() {
                 width="90"
                 height="90"
                 loading="lazy"
+                style={{ objectFit: "cover" }}
               ></img>
             </div>
           ))}
@@ -122,56 +113,39 @@ export default function ProductPage() {
       ),
     },
     {
-      title: "Code",
-      dataIndex: "code",
-      key: "code",
+      title: "Author",
+      dataIndex: "author",
+      key: "author",
+      width: 250,
+      render: (author) => <strong>{author}</strong>,
     },
     {
-      title: "Style",
-      dataIndex: "style",
-      key: "style",
-      render: (style) => style.name,
-    },
-    {
-      title: "Material",
-      dataIndex: "material",
-      key: "material",
-      render: (material) => material.name,
+      title: "Publisher",
+      dataIndex: "publisher",
+      key: "publisher",
+      width: 250,
+      render: (publisher) => <strong>{publisher}</strong>,
     },
     {
       title: "Category",
       dataIndex: "category",
       key: "category",
+      width: 250,
       render: (category) => category.name,
     },
+
     {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
-      render: (type) => type.name,
+      title: "Created At",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (createdAt) => formatDate(createdAt),
     },
     {
-      title: "Sold",
-      dataIndex: "sold",
-      key: "sold",
+      title: "Updated At",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      render: (updatedAt) => formatDate(updatedAt),
     },
-    {
-      title: "Amount",
-      dataIndex: "amount",
-      key: "amount",
-    },
-    // {
-    //   title: "Created At",
-    //   dataIndex: "createdAt",
-    //   key: "createdAt",
-    //   render: (createdAt) => formatDate(createdAt),
-    // },
-    // {
-    //   title: "Updated At",
-    //   dataIndex: "updatedAt",
-    //   key: "updatedAt",
-    //   render: (updatedAt) => formatDate(updatedAt),
-    // },
 
     {
       title: "Action",
@@ -180,12 +154,12 @@ export default function ProductPage() {
       width: 150,
       render: (text, product) => (
         <Space size="small">
-          <Link to={"/admin/manage-product-new/" + product._id}>
+          <Link to={"/admin/manage-product-new/" + product.id}>
             <Button size="sm">View</Button>
           </Link>
           <Popconfirm
             title="Are you sure to delete this product?"
-            onConfirm={() => confirmDelete(product._id)}
+            onConfirm={() => confirmDelete(product.id)}
             onCancel={cancel}
             okText="Yes"
             cancelText="No"
@@ -201,21 +175,12 @@ export default function ProductPage() {
   const filterCallback = (elements) => {
     return (
       elements.name.toLowerCase().includes(filter) ||
-      elements._id.toLowerCase().includes(filter)
+      elements.id.toLowerCase().includes(filter)
     );
   };
 
-  const filterType = (element) => {
-    return type === "all" || element.type._id === type;
-  };
-  const filterStyle = (element) => {
-    return style === "all" || element.style._id === style;
-  };
-  const filterMaterial = (element) => {
-    return material === "all" || element.material._id === material;
-  };
   const filterCategory = (element) => {
-    return category === "all" || element.category._id === category;
+    return category === "all" || element.category.id === category;
   };
 
   function onChange(pagination, filters, sorter, extra) {
@@ -240,57 +205,6 @@ export default function ProductPage() {
                   </div>
                   <div className="col">
                     <Label>
-                      <strong>Type</strong>
-                    </Label>
-
-                    <Input
-                      type="select"
-                      id="type"
-                      value={type}
-                      onChange={(e) => setType(e.target.value)}
-                    >
-                      <option value="all">All</option>
-                      {productTypes.map((e) => (
-                        <option value={e._id}>{e.name}</option>
-                      ))}
-                    </Input>
-                  </div>
-                  <div className="col">
-                    <Label>
-                      <strong>Style</strong>
-                    </Label>
-
-                    <Input
-                      type="select"
-                      id="style"
-                      value={style}
-                      onChange={(e) => setStyle(e.target.value)}
-                    >
-                      <option value="all">All</option>
-                      {styles.map((e) => (
-                        <option value={e._id}>{e.name}</option>
-                      ))}
-                    </Input>
-                  </div>
-                  <div className="col">
-                    <Label>
-                      <strong>Material</strong>
-                    </Label>
-
-                    <Input
-                      type="select"
-                      id="type"
-                      value={material}
-                      onChange={(e) => setMaterial(e.target.value)}
-                    >
-                      <option value="all">All</option>
-                      {materials.map((e) => (
-                        <option value={e._id}>{e.name}</option>
-                      ))}
-                    </Input>
-                  </div>
-                  <div className="col">
-                    <Label>
                       <strong>Category</strong>
                     </Label>
                     <Input
@@ -301,7 +215,7 @@ export default function ProductPage() {
                     >
                       <option value="all">All</option>
                       {categories.map((e) => (
-                        <option value={e._id}>{e.name}</option>
+                        <option value={e.id}>{e.name}</option>
                       ))}
                     </Input>
                   </div>
@@ -329,13 +243,10 @@ export default function ProductPage() {
               </CardHeader>
               <TableAntd
                 columns={columns}
-                dataSource={products
+                dataSource={uniqueBooks
                   .filter(filterCallback)
-                  .filter(filterStyle)
-                  .filter(filterMaterial)
-                  .filter(filterType)
                   .filter(filterCategory)}
-                scroll={{ x: 1700 }}
+                scroll={{ x: 2000 }}
                 onChange={onChange}
               />
             </Card>
