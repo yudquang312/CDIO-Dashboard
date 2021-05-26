@@ -20,7 +20,7 @@ import {
   message,
   // Popconfirm,
   Select,
-  Tag,
+  // Tag,
   // Form as FormAntd,
 } from "antd";
 import { GET_CATEGORIES } from "../../../query/category";

@@ -1,6 +1,4 @@
 import React from "react";
-import axios from "axios";
-
 import {
   Container,
   Col,
@@ -87,8 +85,9 @@ export default function ProductPage() {
       width: 500,
       render: (images) => (
         <div>
-          {images.map((image) => (
+          {images.map((image, index) => (
             <div
+              key={index}
               style={{
                 display: "inline-block",
                 padding: "5px",
@@ -106,7 +105,7 @@ export default function ProductPage() {
                 height="90"
                 loading="lazy"
                 style={{ objectFit: "cover" }}
-              ></img>
+              />
             </div>
           ))}
         </div>
@@ -131,7 +130,7 @@ export default function ProductPage() {
       dataIndex: "category",
       key: "category",
       width: 250,
-      render: (category) => category.name,
+      render: (category) => category?.name,
     },
 
     {
@@ -153,8 +152,8 @@ export default function ProductPage() {
       fixed: "right",
       width: 150,
       render: (text, product) => (
-        <Space size="small">
-          <Link to={"/admin/manage-product-new/" + product.id}>
+        <Space size="small" key={product.id}>
+          <Link to={"/admin/manage-product/" + product.id}>
             <Button size="sm">View</Button>
           </Link>
           <Popconfirm
@@ -197,7 +196,7 @@ export default function ProductPage() {
                 <Row className="align-items-center">
                   <div className="col">
                     <h2 className="mb-0">Products</h2>
-                    <Link to="/admin/manage-product-new/add">
+                    <Link to="/admin/manage-product/add">
                       <Button color="primary" size="md">
                         Create
                       </Button>
@@ -215,7 +214,7 @@ export default function ProductPage() {
                     >
                       <option value="all">All</option>
                       {categories.map((e) => (
-                        <option value={e.id}>{e.name}</option>
+                        <option value={e.id} key={e.id}>{e.name}</option>
                       ))}
                     </Input>
                   </div>

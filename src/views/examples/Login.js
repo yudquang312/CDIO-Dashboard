@@ -16,6 +16,8 @@ import {
   InputGroup,
   Col,
 } from "reactstrap";
+import { message} from "antd";
+
 
 function Login() {
   const userNameRef = React.useRef(null);
@@ -23,7 +25,7 @@ function Login() {
   const [checkLogin, setCheckLogin] = React.useState(false);
 
   React.useEffect(() => {
-    userNameRef.current.value = "vanthaodhdt@gmail.com";
+    userNameRef.current.value = "huydoan@gmail.com";
     passwordRef.current.value = "ta210402";
     sessionStorage.removeItem("isLogged");
   }, []);
@@ -31,19 +33,23 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     queryData(LOGIN, {
-      email: "huydoan@gmail.com",
-      password: "ta210402",
+      email: userNameRef.current.value,
+      password: passwordRef.current.value,
       type: false,
     })
       .then(({ data: { login } }) => {
-        console.log(login);
-        sessionStorage.setItem("isLogged", true);
-        localStorage.setItem("token", login.token);
-        localStorage.setItem("refreshToken", login.refreshToken);
-        setCheckLogin(true);
+        // console.log(login);
+        if (login.user.role === 'ADMIN') {
+          sessionStorage.setItem("isLogged", true);
+          localStorage.setItem("token", login.token);
+          localStorage.setItem("refreshToken", login.refreshToken);
+          message.success('Đăng nhập thành công');
+          setCheckLogin(true);
+        }
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
+        message.error('Đăng nhập thất bại');
       });
   };
   return (

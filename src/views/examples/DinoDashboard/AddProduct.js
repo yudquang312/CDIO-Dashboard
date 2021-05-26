@@ -1,6 +1,5 @@
 import React from "react";
-import axios from "axios";
-
+import {useMutation} from '@apollo/client';
 import {
   Container,
   Col,
@@ -14,10 +13,11 @@ import {
   CardHeader,
 } from "reactstrap";
 
-import { message, Select, Tag } from "antd";
+import { message, Select} from "antd";
 import Image from "./Image";
 import { GET_CATEGORIES } from "../../../query/category";
 import { CREATE_UNIQUE_BOOK } from "../../../query/uniqueBook";
+import {UPLOAD_MULTI_FILE} from '../../../query/upload';
 import { queryData, mutateData } from "../../../common";
 
 export default function ProductAddPage() {
@@ -46,6 +46,16 @@ export default function ProductAddPage() {
         console.log(err);
       });
   };
+
+  const [upload] = useMutation(UPLOAD_MULTI_FILE, {
+    onCompleted: (data) => {
+      const tamp = data.uploadMultiFile.map((dt) => dt.url);
+      setImages([...images, ...tamp]);
+    },
+    onError: (err) => {
+      console.log('upload images error', err);
+    },
+  });
 
   const fillOptions = (values) => {
     return values.map((value) => (
@@ -95,28 +105,33 @@ export default function ProductAddPage() {
     const files = e.target.files;
     console.log(files);
     try {
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
+      // const config = {
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // };
+      // const uploadCloud = (files) =>
+      //   new Promise(async (resolve, reject) => {
+      //     const file = files[0];
+      //     let formData = new FormData();
+      //     formData.append("file", file);
+      //     const res = await axios.post(
+      //       "http://localhost:3001/api/upload_single",
+      //       formData,
+      //       config
+      //     );
+      //     resolve(res.data.url);
+      //   })
+      //     .then((result) => result)
+      //     .catch((err) => console.log(err));
+      // const data = await uploadCloud(files);
+      // console.log(data);
+      // setImages([...images, data]);
+      upload({
+        variables: {
+          files,
         },
-      };
-      const uploadCloud = (files) =>
-        new Promise(async (resolve, reject) => {
-          const file = files[0];
-          let formData = new FormData();
-          formData.append("file", file);
-          const res = await axios.post(
-            "http://localhost:3001/api/upload_single",
-            formData,
-            config
-          );
-          resolve(res.data.url);
-        })
-          .then((result) => result)
-          .catch((err) => console.log(err));
-      const data = await uploadCloud(files);
-      console.log(data);
-      setImages([...images, data]);
+      });
     } catch (err) {
       console.log(err);
     }

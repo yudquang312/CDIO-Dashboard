@@ -1,12 +1,8 @@
 {
-  "name": "argon-dashboard-react",
+  "name": "dinobo-dashboard",
   "version": "1.1.0",
-  "description": "React version of Argon Dashboard by Creative Tim",
+  "description": "DinoBo Dashboard",
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/creativetimofficial/argon-dashboard-react.git"
-  },
   "keywords": [
     "react",
     "reactjs",
@@ -19,9 +15,6 @@
   ],
   "author": "Creative Tim",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/creativetimofficial/argon-dashboard-react/issues"
-  },
   "homepage": "https://yudquang312.github.io/CDIO-Dashboard",
   "scripts": {
     "start": "set PORT=4000 && react-scripts start",
