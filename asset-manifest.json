@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/CDIO-Dashboard/static/css/main.0224c937.chunk.css",
-    "main.js": "/CDIO-Dashboard/static/js/main.765f05be.chunk.js",
-    "main.js.map": "/CDIO-Dashboard/static/js/main.765f05be.chunk.js.map",
+    "main.js": "/CDIO-Dashboard/static/js/main.e41bf786.chunk.js",
+    "main.js.map": "/CDIO-Dashboard/static/js/main.e41bf786.chunk.js.map",
     "runtime-main.js": "/CDIO-Dashboard/static/js/runtime-main.0a3321c2.js",
     "runtime-main.js.map": "/CDIO-Dashboard/static/js/runtime-main.0a3321c2.js.map",
     "static/css/2.07041b38.chunk.css": "/CDIO-Dashboard/static/css/2.07041b38.chunk.css",
-    "static/js/2.9e68b02c.chunk.js": "/CDIO-Dashboard/static/js/2.9e68b02c.chunk.js",
-    "static/js/2.9e68b02c.chunk.js.map": "/CDIO-Dashboard/static/js/2.9e68b02c.chunk.js.map",
+    "static/js/2.3538ef4b.chunk.js": "/CDIO-Dashboard/static/js/2.3538ef4b.chunk.js",
+    "static/js/2.3538ef4b.chunk.js.map": "/CDIO-Dashboard/static/js/2.3538ef4b.chunk.js.map",
     "index.html": "/CDIO-Dashboard/index.html",
-    "precache-manifest.5b92f7fe0f16debd8203849c7ef519d6.js": "/CDIO-Dashboard/precache-manifest.5b92f7fe0f16debd8203849c7ef519d6.js",
+    "precache-manifest.1885f60d70c563238cdba7a1a5d016af.js": "/CDIO-Dashboard/precache-manifest.1885f60d70c563238cdba7a1a5d016af.js",
     "service-worker.js": "/CDIO-Dashboard/service-worker.js",
     "static/css/2.07041b38.chunk.css.map": "/CDIO-Dashboard/static/css/2.07041b38.chunk.css.map",
     "static/css/main.0224c937.chunk.css.map": "/CDIO-Dashboard/static/css/main.0224c937.chunk.css.map",
-    "static/js/2.9e68b02c.chunk.js.LICENSE.txt": "/CDIO-Dashboard/static/js/2.9e68b02c.chunk.js.LICENSE.txt",
+    "static/js/2.3538ef4b.chunk.js.LICENSE.txt": "/CDIO-Dashboard/static/js/2.3538ef4b.chunk.js.LICENSE.txt",
     "static/media/Dino-cheerful-brand.png": "/CDIO-Dashboard/static/media/Dino-cheerful-brand.26b2f2cc.png",
     "static/media/argon-react-white.png": "/CDIO-Dashboard/static/media/argon-react-white.275a2629.png",
     "static/media/all.min.css": "/CDIO-Dashboard/static/media/fa-solid-900.cdfec5cf.woff",
@@ -22,8 +22,8 @@
   "entrypoints": [
     "static/js/runtime-main.0a3321c2.js",
     "static/css/2.07041b38.chunk.css",
-    "static/js/2.9e68b02c.chunk.js",
+    "static/js/2.3538ef4b.chunk.js",
     "static/css/main.0224c937.chunk.css",
-    "static/js/main.765f05be.chunk.js"
+    "static/js/main.e41bf786.chunk.js"
   ]
 }
