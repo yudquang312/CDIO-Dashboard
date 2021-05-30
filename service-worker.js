@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/CDIO-Dashboard/precache-manifest.094c0d4e1633923365424b95051ab56b.js"
+  "/CDIO-Dashboard/precache-manifest.637892f9c96010c0f1a492001cca5ade.js"
 );
 
 self.addEventListener('message', (event) => {

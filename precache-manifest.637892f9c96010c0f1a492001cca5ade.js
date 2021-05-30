@@ -1,27 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "585d92c8a50593e7b6e203629aa68416",
+    "revision": "f84230d530dc073b0e7fac84bacdb551",
     "url": "/CDIO-Dashboard/index.html"
   },
   {
-    "revision": "1e5933057c26ae2a28e2",
+    "revision": "3946fd2091ef359b926c",
     "url": "/CDIO-Dashboard/static/css/2.07041b38.chunk.css"
   },
   {
-    "revision": "f50a6e21d54df727f95b",
+    "revision": "757ef9021ef5369a1e62",
     "url": "/CDIO-Dashboard/static/css/main.0224c937.chunk.css"
   },
   {
-    "revision": "1e5933057c26ae2a28e2",
-    "url": "/CDIO-Dashboard/static/js/2.b80396d2.chunk.js"
+    "revision": "3946fd2091ef359b926c",
+    "url": "/CDIO-Dashboard/static/js/2.abd3f12c.chunk.js"
   },
   {
     "revision": "6a88bfaed2766aca6bea54b3067cb782",
-    "url": "/CDIO-Dashboard/static/js/2.b80396d2.chunk.js.LICENSE.txt"
+    "url": "/CDIO-Dashboard/static/js/2.abd3f12c.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "f50a6e21d54df727f95b",
-    "url": "/CDIO-Dashboard/static/js/main.f1d56ad7.chunk.js"
+    "revision": "757ef9021ef5369a1e62",
+    "url": "/CDIO-Dashboard/static/js/main.5eab1bc3.chunk.js"
   },
   {
     "revision": "8280c59e9e3b4a0c501b",
