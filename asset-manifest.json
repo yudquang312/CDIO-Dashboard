@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/CDIO-Dashboard/static/css/main.0224c937.chunk.css",
-    "main.js": "/CDIO-Dashboard/static/js/main.5eab1bc3.chunk.js",
-    "main.js.map": "/CDIO-Dashboard/static/js/main.5eab1bc3.chunk.js.map",
+    "main.js": "/CDIO-Dashboard/static/js/main.2a5276d4.chunk.js",
+    "main.js.map": "/CDIO-Dashboard/static/js/main.2a5276d4.chunk.js.map",
     "runtime-main.js": "/CDIO-Dashboard/static/js/runtime-main.0a3321c2.js",
     "runtime-main.js.map": "/CDIO-Dashboard/static/js/runtime-main.0a3321c2.js.map",
     "static/css/2.07041b38.chunk.css": "/CDIO-Dashboard/static/css/2.07041b38.chunk.css",
     "static/js/2.abd3f12c.chunk.js": "/CDIO-Dashboard/static/js/2.abd3f12c.chunk.js",
     "static/js/2.abd3f12c.chunk.js.map": "/CDIO-Dashboard/static/js/2.abd3f12c.chunk.js.map",
     "index.html": "/CDIO-Dashboard/index.html",
-    "precache-manifest.637892f9c96010c0f1a492001cca5ade.js": "/CDIO-Dashboard/precache-manifest.637892f9c96010c0f1a492001cca5ade.js",
+    "precache-manifest.38e6f0aceb468e788937fea41f3ac2ff.js": "/CDIO-Dashboard/precache-manifest.38e6f0aceb468e788937fea41f3ac2ff.js",
     "service-worker.js": "/CDIO-Dashboard/service-worker.js",
     "static/css/2.07041b38.chunk.css.map": "/CDIO-Dashboard/static/css/2.07041b38.chunk.css.map",
     "static/css/main.0224c937.chunk.css.map": "/CDIO-Dashboard/static/css/main.0224c937.chunk.css.map",
@@ -24,6 +24,6 @@
     "static/css/2.07041b38.chunk.css",
     "static/js/2.abd3f12c.chunk.js",
     "static/css/main.0224c937.chunk.css",
-    "static/js/main.5eab1bc3.chunk.js"
+    "static/js/main.2a5276d4.chunk.js"
   ]
 }

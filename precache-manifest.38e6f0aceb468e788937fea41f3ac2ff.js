@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "f84230d530dc073b0e7fac84bacdb551",
+    "revision": "698cfe29aa1a80fc5a1095cd4e4d97c2",
     "url": "/CDIO-Dashboard/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/CDIO-Dashboard/static/css/2.07041b38.chunk.css"
   },
   {
-    "revision": "757ef9021ef5369a1e62",
+    "revision": "6dacd32d8372e3ccf78f",
     "url": "/CDIO-Dashboard/static/css/main.0224c937.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/CDIO-Dashboard/static/js/2.abd3f12c.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "757ef9021ef5369a1e62",
-    "url": "/CDIO-Dashboard/static/js/main.5eab1bc3.chunk.js"
+    "revision": "6dacd32d8372e3ccf78f",
+    "url": "/CDIO-Dashboard/static/js/main.2a5276d4.chunk.js"
   },
   {
     "revision": "8280c59e9e3b4a0c501b",
